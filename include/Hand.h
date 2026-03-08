@@ -2,6 +2,7 @@
 #define HAND_H
 
 #include <vector>
+
 #include "Card.h"
 
 struct Hand {
