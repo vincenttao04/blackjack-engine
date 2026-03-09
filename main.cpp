@@ -1,12 +1,27 @@
 #include <iostream>
 
+#include "Hand.h"
+#include "Rules.h"
+#include "Shoe.h"
+
 using namespace std;
 
 int main() {
-    cout << "hit, stand or simulate" << endl;
+    Rules rules;
+    Shoe shoe;
 
-    string choice;
+    shoe.initialize(rules.numberOfDecks);
+    shoe.shuffle();
 
-    cin >> choice;
+    Hand dealer;
+    Hand player;
+
+    dealer.addCard(shoe.draw());
+    player.addCard(shoe.draw());
+    player.addCard(shoe.draw());
+
+    cout << "dealer's hand total: " << dealer.value() << endl;
+    cout << "player's hand total: " << player.value() << endl;
+
     return 0;
 }
