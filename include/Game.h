@@ -10,6 +10,7 @@ class Game {
     static void dealInitialCards(GameState& state);
     static void playDealer(GameState& state);
     static Outcome determineOutcome(const GameState& state);
+    static void playerHit(GameState& state);
 };
 
 #endif

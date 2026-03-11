@@ -33,3 +33,7 @@ Outcome Game::determineOutcome(const GameState& state) {
 
     return Outcome::Push;
 };
+
+void Game::playerHit(GameState& state) {
+    state.player.addCard(state.shoe.draw());
+};
