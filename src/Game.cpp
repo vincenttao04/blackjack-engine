@@ -1,11 +1,36 @@
 #include "Game.h"
 
+#include <iostream>
+
+using namespace std;
+
 void Game::dealInitialCards(GameState& state) {
     state.player.addCard(state.shoe.draw());
     state.dealer.addCard(state.shoe.draw());
 
     state.player.addCard(state.shoe.draw());
     state.dealer.addCard(state.shoe.draw());
+};
+
+void Game::playerTurn(GameState& state) {
+    while (true) {
+        cout << "Player value: " << state.player.value() << endl;
+
+        if (state.player.isBust()) {
+            cout << "Player busts" << endl;
+            break;
+        };
+
+        cout << "Hit (h) or Stand (s): ";
+        char action;
+        cin >> action;
+
+        if (action == 'h') {
+            playerHit(state);
+        } else if (action == 's') {
+            break;
+        }
+    };
 };
 
 void Game::playDealer(GameState& state) {
@@ -36,4 +61,31 @@ Outcome Game::determineOutcome(const GameState& state) {
 
 void Game::playerHit(GameState& state) {
     state.player.addCard(state.shoe.draw());
+};
+
+void Game::playRound(GameState& state) {
+    dealInitialCards(state);
+
+    cout << "Dealer showing: " << state.dealer.cards[0].value << endl;
+
+    playerTurn(state);
+
+    if (!state.player.isBust()) {
+        Game::playDealer(state);
+        cout << "Dealer value: " << state.dealer.value() << endl;
+    }
+
+    Outcome result = Game::determineOutcome(state);
+
+    if (result == Outcome::PlayerWin) {
+        cout << "Player wins" << endl;
+    };
+
+    if (result == Outcome::DealerWin) {
+        cout << "Dealer wins" << endl;
+    };
+
+    if (result == Outcome::Push) {
+        cout << "Push" << endl;
+    };
 };
