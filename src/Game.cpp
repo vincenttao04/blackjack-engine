@@ -14,10 +14,8 @@ void Game::dealInitialCards(GameState& state) {
 
 void Game::playerTurn(GameState& state) {
     while (true) {
-        int length = state.player.cards.size();
-
         cout << "Player value: ";
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < state.player.cards.size(); i++) {
             cout << state.player.cards[i].value << " ";
         };
         cout << "| " << state.player.value() << endl;
@@ -47,8 +45,17 @@ void Game::playerTurn(GameState& state) {
 };
 
 void Game::playDealer(GameState& state) {
+    cout << "Dealer value: " << state.dealer.cards[0].value << " "
+         << state.dealer.cards[1].value << " | " << state.dealer.value()
+         << endl;
+
     while (state.dealer.value() < 17) {
         state.dealer.addCard(state.shoe.draw());
+        cout << "Dealer value: ";
+        for (int i = 0; i < state.dealer.cards.size(); i++) {
+            cout << state.dealer.cards[i].value << " ";
+        };
+        cout << "| " << state.dealer.value() << endl;
     }
 };
 
@@ -79,16 +86,15 @@ void Game::playerHit(GameState& state) {
     state.player.addCard(state.shoe.draw());
 };
 
-void Game::playRound(GameState& state) {
+void Game::startRound(GameState& state) {
     dealInitialCards(state);
 
-    cout << "Dealer showing: " << state.dealer.cards[0].value << endl;
+    cout << "Dealer showing: " << state.dealer.cards[0].value << " ?" << endl;
 
     playerTurn(state);
 
     if (!state.player.isBust()) {
         Game::playDealer(state);
-        cout << "Dealer value: " << state.dealer.value() << endl;
     }
 
     Outcome result = Game::determineOutcome(state);
