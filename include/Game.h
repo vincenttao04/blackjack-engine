@@ -1,0 +1,15 @@
+#ifndef GAME_H
+#define GAME_H
+
+#include "GameState.h"
+
+enum class Outcome { DealerWin, PlayerWin, Push };
+
+class Game {
+   public:
+    static void dealInitialCards(GameState& state);
+    static void playDealer(GameState& state);
+    static Outcome determineOutcome(const GameState& state);
+};
+
+#endif
