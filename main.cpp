@@ -14,7 +14,7 @@ int main() {
     state.shoe.initialize(rules.numberOfDecks);
     state.shoe.shuffle();
 
-    Game::playRound(state);
+    Game::startRound(state);
 
     return 0;
 }
