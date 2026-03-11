@@ -13,15 +13,15 @@ void Game::dealInitialCards(GameState& state) {
 };
 
 void Game::playerTurn(GameState& state) {
-    char action = 'h';
-
-    while (action != 's') {
+    while (true) {
         cout << "Player value: " << state.player.value() << endl;
 
         if (state.player.isBust()) {
             cout << "Player busts" << endl;
             break;
         };
+
+        char action = 'h';
 
         while (true) {
             cout << "Hit (h) or Stand (s): " << endl;
@@ -30,8 +30,9 @@ void Game::playerTurn(GameState& state) {
             if (action == 'h') {
                 playerHit(state);
                 break;
-            } else if (action == 's') {
-                break;
+            }
+            if (action == 's') {
+                return;
             }
 
             cout << "Invalid input" << endl;
