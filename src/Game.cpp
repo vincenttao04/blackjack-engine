@@ -14,7 +14,13 @@ void Game::dealInitialCards(GameState& state) {
 
 void Game::playerTurn(GameState& state) {
     while (true) {
-        cout << "Player value: " << state.player.value() << endl;
+        int length = state.player.cards.size();
+
+        cout << "Player value: ";
+        for (int i = 0; i < length; i++) {
+            cout << state.player.cards[i].value << " ";
+        };
+        cout << "| " << state.player.value() << endl;
 
         if (state.player.isBust()) {
             cout << "Player busts" << endl;
@@ -47,6 +53,9 @@ void Game::playDealer(GameState& state) {
 };
 
 Outcome Game::determineOutcome(const GameState& state) {
+    int playerValue = state.player.value();
+    int dealerValue = state.dealer.value();
+
     if (state.player.isBust()) {
         return Outcome::DealerWin;
     };
@@ -55,11 +64,11 @@ Outcome Game::determineOutcome(const GameState& state) {
         return Outcome::PlayerWin;
     };
 
-    if (state.player.value() > state.dealer.value()) {
+    if (playerValue > dealerValue) {
         return Outcome::PlayerWin;
     };
 
-    if (state.dealer.value() > state.player.value()) {
+    if (dealerValue > playerValue) {
         return Outcome::DealerWin;
     };
 
