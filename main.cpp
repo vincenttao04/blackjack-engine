@@ -20,7 +20,7 @@ int main() {
 
     while (true) {
         cout << "Player value: " << state.player.value() << endl;
-        cout << "Hit (h) or Stand (s)";
+        cout << "Hit (h) or Stand (s): ";
 
         if (state.player.isBust()) {
             cout << "Player busts" << endl;
@@ -39,6 +39,7 @@ int main() {
 
     if (!state.player.isBust()) {
         Game::playDealer(state);
+        cout << "Dealer value: " << state.dealer.value() << endl;
     }
 
     Outcome result = Game::determineOutcome(state);
