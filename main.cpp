@@ -20,13 +20,13 @@ int main() {
 
     while (true) {
         cout << "Player value: " << state.player.value() << endl;
-        cout << "Hit (h) or Stand (s): ";
 
         if (state.player.isBust()) {
             cout << "Player busts" << endl;
             break;
         };
 
+        cout << "Hit (h) or Stand (s): ";
         char action;
         cin >> action;
 
