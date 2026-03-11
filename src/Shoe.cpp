@@ -1,0 +1,36 @@
+#include "Shoe.h"
+
+#include <algorithm>
+#include <random>
+
+void Shoe::initialize(int numOfDecks) {
+    cards.clear();
+
+    for (int deck = 0; deck < numOfDecks; deck++) {
+        for (int value = 1; value <= 9; value++) {
+            // Each card value (1-9) appears 4 times per deck (one for each
+            // suit)
+            for (int suit = 0; suit < 4; suit++) {
+                cards.push_back({value});
+            }
+        }
+
+        // 4 cards with value 10 (10, J, Q, K) * 4 suits = 16 cards per deck
+        for (int i = 0; i < 16; i++) {
+            cards.push_back({10});
+        }
+    }
+}
+
+void Shoe::shuffle() {
+    static std::random_device rd;
+    static std::mt19937 rng(rd());
+
+    std::shuffle(cards.begin(), cards.end(), rng);
+}
+
+Card Shoe::draw() {
+    Card card = cards.back();
+    cards.pop_back();
+    return card;
+}
