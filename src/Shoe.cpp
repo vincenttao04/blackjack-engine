@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <random>
 
-void Shoe::initialize(int numOfDecks) {
+void Shoe::initialize(const int numberOfDecks) {
     cards.clear();
 
-    for (int deck = 0; deck < numOfDecks; deck++) {
+    for (int deck = 0; deck < numberOfDecks; deck++) {
         for (int value = 1; value <= 9; value++) {
             // Each card value (1-9) appears 4 times per deck (one for each
             // suit)
@@ -33,4 +33,14 @@ Card Shoe::draw() {
     Card card = cards.back();
     cards.pop_back();
     return card;
+}
+
+int Shoe::remaining() const {
+    return cards.size();
+}
+
+bool Shoe::needsReshuffle(int numberOfDecks, double penetration) const {
+    const int CARDS_PER_DECK = 52;
+    int threshold = int(numberOfDecks * (1 - penetration) * CARDS_PER_DECK);
+    return remaining() < threshold;
 }
