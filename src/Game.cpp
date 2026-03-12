@@ -22,6 +22,8 @@ void Game::dealInitialCards(GameState& state) {
 };
 
 void Game::playerTurn(GameState& state) {
+    char action = 'h';
+
     while (true) {
         cout << "Player: ";
         printHand(state.player);
@@ -32,8 +34,6 @@ void Game::playerTurn(GameState& state) {
         };
 
         cout << "----------------------------------------" << endl;
-
-        char action = 'h';
 
         while (true) {
             cout << "Hit (h) or Stand (s): ";
@@ -90,12 +90,15 @@ void Game::playerHit(GameState& state) {
     state.player.addCard(state.shoe.draw());
 };
 
-void Game::startRound(GameState& state) {
+void Game::playRound(GameState& state) {
     cout << "========================================" << endl;
     cout << "               BLACKJACK" << endl;
     cout << "========================================" << endl;
     cout << "Number of decks: " << state.rules.numberOfDecks << endl;
     cout << "----------------------------------------" << endl;
+
+    state.player.clear();
+    state.dealer.clear();
 
     dealInitialCards(state);
 
