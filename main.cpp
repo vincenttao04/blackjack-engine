@@ -18,9 +18,18 @@ int main() {
     state.shoe.initialize(state.rules.numberOfDecks);
     state.shoe.shuffle();
 
+    cout << "========================================" << endl;
+    cout << "               BLACKJACK" << endl;
+    cout << "========================================" << endl;
+    cout << "Number of decks: " << state.rules.numberOfDecks << endl;
+    cout << "----------------------------------------" << endl;
+
     char playAgain = 'y';
+    int count = 1;
 
     while (playAgain == 'y') {
+        cout << "Round " << count << endl;
+
         Game::playRound(state);
 
         while (true) {
@@ -33,6 +42,8 @@ int main() {
 
             cout << "Invalid input" << endl;
         };
+
+        count++;
     };
 
     return 0;

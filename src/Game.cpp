@@ -91,12 +91,6 @@ void Game::playerHit(GameState& state) {
 };
 
 void Game::playRound(GameState& state) {
-    cout << "========================================" << endl;
-    cout << "               BLACKJACK" << endl;
-    cout << "========================================" << endl;
-    cout << "Number of decks: " << state.rules.numberOfDecks << endl;
-    cout << "----------------------------------------" << endl;
-
     state.player.clear();
     state.dealer.clear();
 
