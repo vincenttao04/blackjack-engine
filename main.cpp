@@ -29,13 +29,12 @@ int main() {
     int count = 1;
 
     while (playAgain == 'y') {
-        if (state.shoe.remaining() <
-            (int(state.rules.numberOfDecks * (1 - state.rules.penetration) *
-                 52))) {
+        if (state.shoe.needsReshuffle(state.rules.numberOfDecks,
+                                      state.rules.penetration)) {
             state.shoe.initialize(state.rules.numberOfDecks);
             state.shoe.shuffle();
             cout << "Reshuffling..." << endl;
-        }
+        };
 
         cout << "Round " << count << ": " << state.shoe.remaining()
              << " cards remaining" << endl;
