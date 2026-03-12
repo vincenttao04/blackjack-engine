@@ -28,7 +28,8 @@ int main() {
     int count = 1;
 
     while (playAgain == 'y') {
-        cout << "Round " << count << endl;
+        cout << "Round " << count << ": " << state.shoe.remaining()
+             << " cards remaining" << endl;
 
         Game::playRound(state);
 
