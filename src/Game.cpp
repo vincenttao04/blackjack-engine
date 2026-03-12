@@ -6,6 +6,13 @@
 
 using namespace std;
 
+static void printHand(Hand& hand) {
+    for (int i = 0; i < hand.cards.size(); i++) {
+        cout << hand.cards[i].value << " ";
+    };
+    cout << "| " << hand.value() << endl;
+}
+
 void Game::dealInitialCards(GameState& state) {
     state.player.addCard(state.shoe.draw());
     state.dealer.addCard(state.shoe.draw());
@@ -17,10 +24,7 @@ void Game::dealInitialCards(GameState& state) {
 void Game::playerTurn(GameState& state) {
     while (true) {
         cout << "Player: ";
-        for (int i = 0; i < state.player.cards.size(); i++) {
-            cout << state.player.cards[i].value << " ";
-        };
-        cout << "| " << state.player.value() << endl;
+        printHand(state.player);
 
         if (state.player.isBust()) {
             cout << "Player busts" << endl;
@@ -49,17 +53,13 @@ void Game::playerTurn(GameState& state) {
 };
 
 void Game::playDealer(GameState& state) {
-    cout << "Dealer: " << state.dealer.cards[0].value << " "
-         << state.dealer.cards[1].value << " | " << state.dealer.value()
-         << endl;
+    cout << "Dealer: ";
+    printHand(state.dealer);
 
     while (state.dealer.value() < 17) {
         state.dealer.addCard(state.shoe.draw());
-        cout << "Dealer value: ";
-        for (int i = 0; i < state.dealer.cards.size(); i++) {
-            cout << state.dealer.cards[i].value << " ";
-        };
-        cout << "| " << state.dealer.value() << endl;
+        cout << "Dealer: ";
+        printHand(state.dealer);
     }
 };
 
