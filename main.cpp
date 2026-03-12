@@ -18,7 +18,22 @@ int main() {
     state.shoe.initialize(state.rules.numberOfDecks);
     state.shoe.shuffle();
 
-    Game::startRound(state);
+    char playAgain = 'y';
+
+    while (playAgain == 'y') {
+        Game::playRound(state);
+
+        while (true) {
+            cout << "Play again? (y/n): ";
+            cin >> playAgain;
+
+            if (playAgain == 'y' || playAgain == 'n') {
+                break;
+            }
+
+            cout << "Invalid input" << endl;
+        };
+    };
 
     return 0;
 }

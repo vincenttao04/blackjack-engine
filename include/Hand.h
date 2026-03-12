@@ -11,6 +11,7 @@ struct Hand {
     void addCard(const Card& card);
     int value() const;
     bool isBust() const;
+    void clear();
 };
 
 #endif
