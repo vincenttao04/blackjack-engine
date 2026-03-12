@@ -8,10 +8,11 @@
 struct Shoe {
     std::vector<Card> cards;
 
-    void initialize(int numOfDecks);
+    void initialize(int numberOfDecks);
     void shuffle();
     Card draw();
     int remaining();
+    bool needsReshuffle(int numberOfDecks, double penetration);
 };
 
 #endif
