@@ -3,6 +3,7 @@
 
 struct Rules {
     int numberOfDecks;
+    double penetration;
     bool dealerHitsSoft17;
     double blackjackPayout;
 };
