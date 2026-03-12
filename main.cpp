@@ -8,52 +8,51 @@
 using namespace std;
 
 int main() {
-    Rules rules;
     GameState state;
 
-    state.shoe.initialize(rules.numberOfDecks);
+    // Configure game rules
+    state.rules.numberOfDecks = 1;
+    state.rules.penetration = 0.75;
+    state.rules.dealerHitsSoft17 = false;  // unused
+    state.rules.blackjackPayout = 1.5;     // unused
+
+    state.shoe.initialize(state.rules.numberOfDecks);
     state.shoe.shuffle();
 
-    Game::dealInitialCards(state);
+    cout << "========================================" << endl;
+    cout << "               BLACKJACK" << endl;
+    cout << "========================================" << endl;
+    cout << "Number of decks: " << state.rules.numberOfDecks << endl;
+    cout << "----------------------------------------" << endl;
 
-    cout << "Dealer showing: " << state.dealer.cards[0].value << endl;
+    char playAgain = 'y';
+    int count = 1;
 
-    while (true) {
-        cout << "Player value: " << state.player.value() << endl;
-
-        if (state.player.isBust()) {
-            cout << "Player busts" << endl;
-            break;
+    while (playAgain == 'y') {
+        if (state.shoe.needsReshuffle(state.rules.numberOfDecks,
+                                      state.rules.penetration)) {
+            state.shoe.initialize(state.rules.numberOfDecks);
+            state.shoe.shuffle();
+            cout << "Reshuffling..." << endl;
         };
 
-        cout << "Hit (h) or Stand (s): ";
-        char action;
-        cin >> action;
+        cout << "Round " << count << ": " << state.shoe.remaining()
+             << " cards remaining" << endl;
 
-        if (action == 'h') {
-            state.player.addCard(state.shoe.draw());
-        } else if (action == 's') {
-            break;
-        }
-    };
+        Game::playRound(state);
 
-    if (!state.player.isBust()) {
-        Game::playDealer(state);
-        cout << "Dealer value: " << state.dealer.value() << endl;
-    }
+        while (true) {
+            cout << "Play again? (y/n): ";
+            cin >> playAgain;
 
-    Outcome result = Game::determineOutcome(state);
+            if (playAgain == 'y' || playAgain == 'n') {
+                break;
+            }
 
-    if (result == Outcome::PlayerWin) {
-        cout << "Player wins" << endl;
-    };
+            cout << "Invalid input" << endl;
+        };
 
-    if (result == Outcome::DealerWin) {
-        cout << "Dealer wins" << endl;
-    };
-
-    if (result == Outcome::Push) {
-        cout << "Push" << endl;
+        count++;
     };
 
     return 0;

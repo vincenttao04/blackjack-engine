@@ -28,3 +28,7 @@ int Hand::value() const {
 bool Hand::isBust() const {
     return value() > 21;
 }
+
+void Hand::clear() {
+    return cards.clear();
+}
