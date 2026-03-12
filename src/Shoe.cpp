@@ -34,3 +34,7 @@ Card Shoe::draw() {
     cards.pop_back();
     return card;
 }
+
+int Shoe::remaining() {
+    return cards.size();
+}

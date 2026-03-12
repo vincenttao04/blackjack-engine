@@ -11,6 +11,7 @@ struct Shoe {
     void initialize(int numOfDecks);
     void shuffle();
     Card draw();
+    int remaining();
 };
 
 #endif
