@@ -8,10 +8,14 @@
 using namespace std;
 
 int main() {
-    Rules rules;
     GameState state;
 
-    state.shoe.initialize(rules.numberOfDecks);
+    // Configure game rules
+    state.rules.numberOfDecks = 6;
+    state.rules.dealerHitsSoft17 = false;  // unused
+    state.rules.blackjackPayout = 1.5;     // unused
+
+    state.shoe.initialize(state.rules.numberOfDecks);
     state.shoe.shuffle();
 
     Game::startRound(state);

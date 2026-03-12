@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Rules.h"
+
 using namespace std;
 
 void Game::dealInitialCards(GameState& state) {
@@ -14,7 +16,7 @@ void Game::dealInitialCards(GameState& state) {
 
 void Game::playerTurn(GameState& state) {
     while (true) {
-        cout << "Player value: ";
+        cout << "Player: ";
         for (int i = 0; i < state.player.cards.size(); i++) {
             cout << state.player.cards[i].value << " ";
         };
@@ -25,10 +27,12 @@ void Game::playerTurn(GameState& state) {
             break;
         };
 
+        cout << "----------------------------------------" << endl;
+
         char action = 'h';
 
         while (true) {
-            cout << "Hit (h) or Stand (s): " << endl;
+            cout << "Hit (h) or Stand (s): ";
             cin >> action;
 
             if (action == 'h') {
@@ -45,7 +49,7 @@ void Game::playerTurn(GameState& state) {
 };
 
 void Game::playDealer(GameState& state) {
-    cout << "Dealer value: " << state.dealer.cards[0].value << " "
+    cout << "Dealer: " << state.dealer.cards[0].value << " "
          << state.dealer.cards[1].value << " | " << state.dealer.value()
          << endl;
 
@@ -87,9 +91,15 @@ void Game::playerHit(GameState& state) {
 };
 
 void Game::startRound(GameState& state) {
+    cout << "========================================" << endl;
+    cout << "               BLACKJACK" << endl;
+    cout << "========================================" << endl;
+    cout << "Number of decks: " << state.rules.numberOfDecks << endl;
+    cout << "----------------------------------------" << endl;
+
     dealInitialCards(state);
 
-    cout << "Dealer showing: " << state.dealer.cards[0].value << " ?" << endl;
+    cout << "Dealer: " << state.dealer.cards[0].value << " ?" << endl;
 
     playerTurn(state);
 
@@ -99,15 +109,17 @@ void Game::startRound(GameState& state) {
 
     Outcome result = Game::determineOutcome(state);
 
+    cout << "========================================" << endl;
     if (result == Outcome::PlayerWin) {
-        cout << "Player wins" << endl;
+        cout << "Result: Player wins" << endl;
     };
 
     if (result == Outcome::DealerWin) {
-        cout << "Dealer wins" << endl;
+        cout << "Result: Dealer wins" << endl;
     };
 
     if (result == Outcome::Push) {
-        cout << "Push" << endl;
+        cout << "Result: Push" << endl;
     };
+    cout << "========================================" << endl;
 };
