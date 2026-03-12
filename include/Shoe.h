@@ -11,8 +11,8 @@ struct Shoe {
     void initialize(int numberOfDecks);
     void shuffle();
     Card draw();
-    int remaining();
-    bool needsReshuffle(int numberOfDecks, double penetration);
+    int remaining() const;
+    bool needsReshuffle(int numberOfDecks, double penetration) const;
 };
 
 #endif

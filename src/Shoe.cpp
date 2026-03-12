@@ -35,11 +35,12 @@ Card Shoe::draw() {
     return card;
 }
 
-int Shoe::remaining() {
+int Shoe::remaining() const {
     return cards.size();
 }
 
-bool Shoe::needsReshuffle(int numberOfDecks, double penetration) {
-    int threshold = int(numberOfDecks * (1 - penetration) * 52);
+bool Shoe::needsReshuffle(int numberOfDecks, double penetration) const {
+    const int CARDS_PER_DECK = 52;
+    int threshold = int(numberOfDecks * (1 - penetration) * CARDS_PER_DECK);
     return remaining() < threshold;
 }
