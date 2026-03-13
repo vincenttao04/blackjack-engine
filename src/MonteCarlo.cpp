@@ -1,17 +1,30 @@
 #include "MonteCarlo.h"
 
-double MonteCarlo::simulateStandEV(const GameState& state, int simulations) {
+#include <iostream>
+
+double MonteCarlo::simulate(const GameState& state) {
+    GameState simState = state;
+    Card card = simState.dealer.cards.back();
+    simState.dealer.cards.pop_back();
+    simState.shoe.cards.push_back(card);
+
+    double standEV = simulateStandEV(simState, 100);
+    return standEV;
+}
+
+double MonteCarlo::simulateStandEV(const GameState& simState, int simulations) {
     double total = 0.0;
 
     for (int i = 0; i < simulations; i++) {
-        GameState simState = state;
+        GameState runState = simState;
+        runState.shoe.shuffle();
 
-        while (simState.dealer.value() < 17) {
-            simState.dealer.addCard(simState.shoe.draw());
+        while (runState.dealer.value() < 17) {
+            runState.dealer.addCard(runState.shoe.draw());
         }
 
-        int playerValue = simState.player.value();
-        int dealerValue = simState.dealer.value();
+        int playerValue = runState.player.value();
+        int dealerValue = runState.dealer.value();
 
         if (dealerValue > 21 || playerValue > dealerValue) {
             total += 1.0;
@@ -20,7 +33,13 @@ double MonteCarlo::simulateStandEV(const GameState& state, int simulations) {
         } else {
             total += 0.0;
         };
+
+        std::cout << total / (i + 1) << std::endl;
     };
 
     return total / simulations;
+}
+
+double MonteCarlo::simulateHitEV(const GameState& state, int simulations) {
+    return 1.0;
 }
