@@ -2,11 +2,9 @@
 
 #include <iostream>
 
-#include "Rules.h"
-
 using namespace std;
 
-static void printHand(Hand& hand) {
+static void printHand(const Hand& hand) {
     for (int i = 0; i < hand.cards.size(); i++) {
         cout << hand.cards[i].value << " ";
     };
