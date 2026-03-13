@@ -5,9 +5,9 @@
 
 class MonteCarlo {
    public:
-    static double simulateStandEV(const GameState& state, int simulations);
-
-    static double simulateHitEV(const GameState& state, int simulations);
+    static double simulate(const GameState& state);
+    static double simulateStandEV(const GameState& simState, int simulations);
+    static double simulateHitEV(const GameState& simState, int simulations);
 };
 
 #endif

@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "MonteCarlo.h"
+
 using namespace std;
 
 static void printHand(const Hand& hand) {
@@ -93,6 +95,12 @@ void Game::playRound(GameState& state) {
     state.dealer.clear();
 
     dealInitialCards(state);
+
+    cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
+    double ev = MonteCarlo::simulate(state);
+    cout << "Dealer actual value: " << state.dealer.value() << endl;
+    cout << "monte carlo result: " << ev << endl;
+    cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
 
     cout << "Dealer: " << state.dealer.cards[0].value << " ?" << endl;
 
