@@ -97,9 +97,10 @@ void Game::playRound(GameState& state) {
     dealInitialCards(state);
 
     cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
-    double ev = MonteCarlo::simulate(state);
+    auto [standEV, hitEV] = MonteCarlo::simulate(state);
     cout << "Dealer actual value: " << state.dealer.value() << endl;
-    cout << "monte carlo result: " << ev << endl;
+    cout << "monte carlo stand ev: " << standEV << ", hit ev: " << hitEV
+         << endl;
     cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
 
     cout << "Dealer: " << state.dealer.cards[0].value << " ?" << endl;
