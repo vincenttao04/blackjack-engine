@@ -5,7 +5,7 @@
 
 class MonteCarlo {
    public:
-    static double simulate(const GameState& state);
+    static std::pair<double, double> simulate(const GameState& state);
     static double simulateStandEV(const GameState& simState, int simulations);
     static double simulateHitEV(const GameState& simState, int simulations);
 };
