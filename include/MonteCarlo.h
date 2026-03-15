@@ -6,8 +6,9 @@
 class MonteCarlo {
    public:
     static std::pair<double, double> simulate(const GameState& state);
-    static double simulateStandEV(const GameState& simState, int simulations);
-    static double simulateHitEV(const GameState& simState, int simulations);
+    static double simulateStand(GameState& state);
+    static double simulateHit(GameState& state);
+    static double simulateDecision(GameState& state);
 };
 
 #endif
