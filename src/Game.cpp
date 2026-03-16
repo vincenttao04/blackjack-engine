@@ -73,7 +73,9 @@ void Game::playDealer(GameState& state) {
     cout << "Dealer: ";
     printHand(state.dealer);
 
-    while (state.dealer.value() < 17) {
+    while (state.dealer.value() < 17 ||
+           (state.rules.dealerHitsSoft17 && state.dealer.value() == 17 &&
+            state.dealer.isSoft())) {
         state.dealer.addCard(state.shoe.draw());
         cout << "Dealer: ";
         printHand(state.dealer);
@@ -83,6 +85,16 @@ void Game::playDealer(GameState& state) {
 Outcome Game::determineOutcome(const GameState& state) {
     int playerValue = state.player.value();
     int dealerValue = state.dealer.value();
+    bool playerBlackjack = state.player.isBlackjack();
+    bool dealerBlackjack = state.dealer.isBlackjack();
+
+    if (playerBlackjack && !dealerBlackjack) {
+        return Outcome::PlayerWin;
+    }
+
+    if (dealerBlackjack && !playerBlackjack) {
+        return Outcome::DealerWin;
+    }
 
     if (state.player.isBust()) {
         return Outcome::DealerWin;
@@ -124,6 +136,12 @@ void Game::playRound(GameState& state) {
     Outcome result = Game::determineOutcome(state);
 
     cout << "========================================" << endl;
+    cout << "SUMMARY" << endl;
+    cout << "Player: ";
+    printHand(state.player);
+    cout << "Dealer: ";
+    printHand(state.dealer);
+
     if (result == Outcome::PlayerWin) {
         cout << "Result: Player wins" << endl;
     };
