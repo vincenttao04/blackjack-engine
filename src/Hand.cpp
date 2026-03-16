@@ -30,5 +30,5 @@ bool Hand::isBust() const {
 }
 
 void Hand::clear() {
-    return cards.clear();
+    cards.clear();
 }
