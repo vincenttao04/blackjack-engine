@@ -73,7 +73,9 @@ void Game::playDealer(GameState& state) {
     cout << "Dealer: ";
     printHand(state.dealer);
 
-    while (state.dealer.value() < 17) {
+    while (state.dealer.value() < 17 ||
+           (state.rules.dealerHitsSoft17 && state.dealer.value() == 17 &&
+            state.dealer.isSoft())) {
         state.dealer.addCard(state.shoe.draw());
         cout << "Dealer: ";
         printHand(state.dealer);
