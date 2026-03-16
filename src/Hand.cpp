@@ -1,10 +1,6 @@
 #include "Hand.h"
 
-void Hand::addCard(const Card& card) {
-    cards.push_back(card);
-}
-
-int Hand::value() const {
+std::pair<int, int> Hand::compute() const {
     int total = 0;
     int aceCount = 0;
 
@@ -22,7 +18,20 @@ int Hand::value() const {
         aceCount--;
     }
 
-    return total;
+    return {total, aceCount};
+}
+
+void Hand::addCard(const Card& card) {
+    cards.push_back(card);
+}
+
+int Hand::value() const {
+    return compute().first;  // {total, aceCount}
+}
+
+bool Hand::isSoft() const {
+    auto [total, aceCount] = compute();
+    return aceCount > 0 && total <= 21;
 }
 
 bool Hand::isBust() const {

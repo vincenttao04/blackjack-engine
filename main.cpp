@@ -13,8 +13,8 @@ int main() {
     // Configure game rules
     state.rules.numberOfDecks = 1;
     state.rules.penetration = 0.75;
-    state.rules.dealerHitsSoft17 = false;  // unused
-    state.rules.blackjackPayout = 1.5;     // unused
+    state.rules.dealerHitsSoft17 = false; 
+    state.rules.blackjackPayout = 1.5;    
 
     state.shoe.initialize(state.rules.numberOfDecks);
     state.shoe.shuffle();
@@ -23,6 +23,8 @@ int main() {
     cout << "               BLACKJACK" << endl;
     cout << "========================================" << endl;
     cout << "Number of decks: " << state.rules.numberOfDecks << endl;
+    cout << "Dealer hits soft 17: " << state.rules.dealerHitsSoft17 << endl;
+    cout << "Blackjack payout: " << state.rules.blackjackPayout << endl;
     cout << "----------------------------------------" << endl;
 
     char playAgain = 'y';

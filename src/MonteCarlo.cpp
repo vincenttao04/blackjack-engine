@@ -1,7 +1,6 @@
 #include "MonteCarlo.h"
 
 #include <iostream>
-#include <utility>
 
 std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     GameState simState = state;
