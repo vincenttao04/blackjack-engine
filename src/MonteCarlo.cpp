@@ -1,7 +1,6 @@
 #include "MonteCarlo.h"
 
 #include <iostream>
-#include <utility>
 
 std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     GameState simState = state;
@@ -32,7 +31,14 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
 }
 
 double MonteCarlo::simulateStand(GameState& state) {
-    while (state.dealer.value() < 17) {
+    // Check for blackjack
+    if (state.player.isBlackjack() && !state.dealer.isBlackjack()) {
+        return state.rules.blackjackPayout;
+    }
+
+    while (state.dealer.value() < 17 ||
+           (state.rules.dealerHitsSoft17 && state.dealer.value() == 17 &&
+            state.dealer.isSoft())) {
         state.dealer.addCard(state.shoe.draw());
     }
 
