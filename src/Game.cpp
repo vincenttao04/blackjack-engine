@@ -136,6 +136,12 @@ void Game::playRound(GameState& state) {
     Outcome result = Game::determineOutcome(state);
 
     cout << "========================================" << endl;
+    cout << "SUMMARY" << endl;
+    cout << "Player: ";
+    printHand(state.player);
+    cout << "Dealer: ";
+    printHand(state.dealer);
+
     if (result == Outcome::PlayerWin) {
         cout << "Result: Player wins" << endl;
     };
