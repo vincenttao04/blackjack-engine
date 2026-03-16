@@ -38,6 +38,10 @@ bool Hand::isBust() const {
     return value() > 21;
 }
 
+bool Hand::isBlackjack() const {
+    return value() == 21 && cards.size() == 2;
+}
+
 void Hand::clear() {
     cards.clear();
 }

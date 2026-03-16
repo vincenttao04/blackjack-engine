@@ -17,6 +17,7 @@ struct Hand {
     int value() const;
     bool isSoft() const;
     bool isBust() const;
+    bool isBlackjack() const;
     void clear();
 };
 
