@@ -85,6 +85,16 @@ void Game::playDealer(GameState& state) {
 Outcome Game::determineOutcome(const GameState& state) {
     int playerValue = state.player.value();
     int dealerValue = state.dealer.value();
+    bool playerBlackjack = state.player.isBlackjack();
+    bool dealerBlackjack = state.dealer.isBlackjack();
+
+    if (playerBlackjack && !dealerBlackjack) {
+        return Outcome::PlayerWin;
+    }
+
+    if (dealerBlackjack && !playerBlackjack) {
+        return Outcome::DealerWin;
+    }
 
     if (state.player.isBust()) {
         return Outcome::DealerWin;
