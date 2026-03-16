@@ -1,7 +1,5 @@
 #include "MonteCarlo.h"
 
-#include <iostream>
-
 std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     GameState simState = state;
 
@@ -10,7 +8,7 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     simState.dealer.cards.pop_back();
     simState.shoe.cards.push_back(card);
 
-    const int simulations = 100;
+    const int simulations = 1000000;
     double standEV = 0.0;
     double hitEV = 0.0;
 
@@ -22,9 +20,6 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
 
         standEV += simulateStand(standState);
         hitEV += simulateHit(hitState);
-
-        std::cout << "stand ev: " << standEV / (i + 1) << std::endl;
-        std::cout << "hit ev: " << hitEV / (i + 1) << std::endl;
     };
 
     return {standEV / simulations, hitEV / simulations};
