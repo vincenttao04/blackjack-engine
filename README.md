@@ -4,9 +4,9 @@
 
 A C++ Blackjack strategy engine powered by Monte Carlo simulation. The program allows users to play Blackjack in the console and evaluate decisions by estimating the expected value (EV) of actions such as hit or stand.
 
-Given a game state, the engine simulates a million blackjack rounds and calculates the average outcome of each possible action to recommend the move with the highest EV.
+Given a game state, the engine simulates millions of blackjack rounds and calculates the average outcome of each possible action to recommend the move with the highest EV.
 
-Current number of Monte Carlo simulations: 1,000,000
+Current number of simulations per decision: 1,000,000
 
 ```
 g++ main.cpp src/\*.cpp -Iinclude -o blackjack  // compile
