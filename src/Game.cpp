@@ -2,11 +2,11 @@
 
 #include <iostream>
 
-#include "Rules.h"
+#include "MonteCarlo.h"
 
 using namespace std;
 
-static void printHand(Hand& hand) {
+static void printHand(const Hand& hand) {
     for (int i = 0; i < hand.cards.size(); i++) {
         cout << hand.cards[i].value << " ";
     };
@@ -32,6 +32,23 @@ void Game::playerTurn(GameState& state) {
             cout << "Player busts" << endl;
             break;
         };
+
+        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+             << endl;
+        auto [standEV, hitEV] = MonteCarlo::simulate(state);
+        cout << "Advisor: stand EV = " << standEV << ", hit EV = " << hitEV
+             << endl;
+
+        if (standEV > hitEV) {
+            cout << "RECOMMENDATION: " << "STAND" << endl;
+        } else if (hitEV > standEV) {
+            cout << "RECOMMENDATION: " << "HIT" << endl;
+        } else {
+            cout << "RECOMMENDATION: " << "SAME" << endl;
+        }
+
+        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+             << endl;
 
         cout << "----------------------------------------" << endl;
 
