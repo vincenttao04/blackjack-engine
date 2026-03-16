@@ -33,6 +33,23 @@ void Game::playerTurn(GameState& state) {
             break;
         };
 
+        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+             << endl;
+        auto [standEV, hitEV] = MonteCarlo::simulate(state);
+        cout << "Advisor: stand EV = " << standEV << ", hit EV = " << hitEV
+             << endl;
+
+        if (standEV > hitEV) {
+            cout << "RECOMMENDATION: " << "STAND" << endl;
+        } else if (hitEV > standEV) {
+            cout << "RECOMMENDATION: " << "HIT" << endl;
+        } else {
+            cout << "RECOMMENDATION: " << "SAME" << endl;
+        }
+
+        cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+             << endl;
+
         cout << "----------------------------------------" << endl;
 
         while (true) {
@@ -95,13 +112,6 @@ void Game::playRound(GameState& state) {
     state.dealer.clear();
 
     dealInitialCards(state);
-
-    cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
-    auto [standEV, hitEV] = MonteCarlo::simulate(state);
-    cout << "Dealer actual value: " << state.dealer.value() << endl;
-    cout << "monte carlo stand ev: " << standEV << ", hit ev: " << hitEV
-         << endl;
-    cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << endl;
 
     cout << "Dealer: " << state.dealer.cards[0].value << " ?" << endl;
 
