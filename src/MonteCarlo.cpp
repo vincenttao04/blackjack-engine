@@ -1,5 +1,7 @@
 #include "MonteCarlo.h"
 
+#include <thread>
+
 std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     GameState simState = state;
 
@@ -9,6 +11,8 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     simState.shoe.cards.push_back(card);
 
     const int simulations = 1000000;
+    const int threads = std::thread::hardware_concurrency();
+    const int simulationsPerThread = simulations / threads;
     double standEV = 0.0;
     double hitEV = 0.0;
 

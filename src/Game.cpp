@@ -1,6 +1,8 @@
 #include "Game.h"
 
+#include <chrono>  // temp
 #include <iostream>
+#include <thread>  // temp
 
 #include "MonteCarlo.h"
 
@@ -35,7 +37,14 @@ void Game::playerTurn(GameState& state) {
 
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
+        auto start = std::chrono::steady_clock::now();  // temp
         auto [standEV, hitEV] = MonteCarlo::simulate(state);
+        auto end = std::chrono::steady_clock::now();
+        auto duration =
+            std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        std::cout << "Time elapsed: " << duration.count() << " milliseconds"
+                  << std::endl;
+
         cout << "Advisor: stand EV = " << standEV << ", hit EV = " << hitEV
              << endl;
 
