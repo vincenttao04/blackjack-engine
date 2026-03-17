@@ -18,3 +18,4 @@ g++ main.cpp src/\*.cpp -Iinclude -o blackjack  // compile
 - Multithreaded simulation to scale Monte Carlo runs into the millions _(in progress)_
 - Use smiulation results for reinforcement learning model training
 - Expand decision space (split, double, insurance, etc.)
+- Implement running count and true count
