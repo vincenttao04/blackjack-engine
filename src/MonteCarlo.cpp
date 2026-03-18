@@ -21,7 +21,7 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     const int simulationsPerThread = simulations / threadCount;
     double standEV = 0.0;
     double hitEV = 0.0;
-    mutex mutex;
+    mutex mtx;
 
     auto worker = [&](int simulationsPerThread) {
         double localStandEV = 0.0;
@@ -37,6 +37,7 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
             localHitEV += simulateHit(hitState);
         };
 
+        lock_guard<mutex> locK(mtx);
         standEV += localStandEV;
         hitEV += localHitEV;
     };
