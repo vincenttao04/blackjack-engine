@@ -23,8 +23,8 @@ void Shoe::initialize(const int numberOfDecks) {
 }
 
 void Shoe::shuffle() {
-    static std::random_device rd;
-    static std::mt19937 rng(rd());
+    std::random_device rd;
+    std::mt19937 rng(rd());
 
     std::shuffle(cards.begin(), cards.end(), rng);
 }

@@ -28,15 +28,17 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
         double localHitEV = 0.0;
 
         for (int i = 0; i < simulationsPerThread; i++) {
-            simState.shoe.shuffle();
+            GameState threadState = simState;
+            threadState.shoe.shuffle();
 
-            GameState standState = simState;
-            GameState hitState = simState;
+            GameState standState = threadState;
+            GameState hitState = threadState;
 
             localStandEV += simulateStand(standState);
             localHitEV += simulateHit(hitState);
         };
 
+        // Lock shared data
         lock_guard<mutex> locK(mtx);
         standEV += localStandEV;
         hitEV += localHitEV;
