@@ -1,30 +1,54 @@
 #include "MonteCarlo.h"
 
+#include <iostream>  // temp
+#include <mutex>
 #include <thread>
+#include <vector>
+
+using namespace std;
 
 std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     GameState simState = state;
 
-    // Hide dealer's hole card and return it to the deck
+    // Return dealer's hole card to the deck
     Card card = simState.dealer.cards.back();
     simState.dealer.cards.pop_back();
     simState.shoe.cards.push_back(card);
 
     const int simulations = 1000000;
-    const int threads = std::thread::hardware_concurrency();
-    const int simulationsPerThread = simulations / threads;
+    const int threadCount = thread::hardware_concurrency();
+    cout << "Number of threads: " << threadCount << endl;  // temp
+    const int simulationsPerThread = simulations / threadCount;
     double standEV = 0.0;
     double hitEV = 0.0;
+    mutex mutex;
 
-    for (int i = 0; i < simulations; i++) {
-        simState.shoe.shuffle();
+    auto worker = [&](int simulationsPerThread) {
+        double localStandEV = 0.0;
+        double localHitEV = 0.0;
 
-        GameState standState = simState;
-        GameState hitState = simState;
+        for (int i = 0; i < simulationsPerThread; i++) {
+            simState.shoe.shuffle();
 
-        standEV += simulateStand(standState);
-        hitEV += simulateHit(hitState);
+            GameState standState = simState;
+            GameState hitState = simState;
+
+            localStandEV += simulateStand(standState);
+            localHitEV += simulateHit(hitState);
+        };
+
+        standEV += localStandEV;
+        hitEV += localHitEV;
     };
+
+    vector<thread> threadPool;
+    for (int i = 0; i < threadCount; i++) {
+        threadPool.emplace_back(worker, simulationsPerThread);
+    };
+
+    for (auto& thread : threadPool) {
+        thread.join();
+    }
 
     return {standEV / simulations, hitEV / simulations};
 }
