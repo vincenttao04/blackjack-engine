@@ -24,10 +24,8 @@ void Shoe::initialize(const int numberOfDecks) {
 Card Shoe::draw() {
     std::uniform_int_distribution<int> dist(0, activeSize - 1);
     int randomIndex = dist(rng);
-
-    Card card = cards[randomIndex];
     std::swap(cards[randomIndex], cards[activeSize - 1]);
-    return card;
+    return cards[--activeSize];
 }
 
 int Shoe::remaining() const {
