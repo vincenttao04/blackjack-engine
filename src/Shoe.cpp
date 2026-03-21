@@ -4,20 +4,20 @@
 #include <random>
 
 void Shoe::initialize(const int numberOfDecks) {
-    cards.clear();
+    activeSize = 0;
 
     for (int deck = 0; deck < numberOfDecks; deck++) {
         for (int value = 1; value <= 9; value++) {
             // Each card value (1-9) appears 4 times per deck (one for each
             // suit)
             for (int suit = 0; suit < 4; suit++) {
-                cards.push_back({value});
+                cards[activeSize++] = {value};
             }
         }
 
         // 4 cards with value 10 (10, J, Q, K) * 4 suits = 16 cards per deck
         for (int i = 0; i < 16; i++) {
-            cards.push_back({10});
+            cards[activeSize++] = {10};
         }
     }
 }
