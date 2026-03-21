@@ -26,11 +26,10 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     auto worker = [&](int simulationsPerThread) {
         double localStandEV = 0.0;
         double localHitEV = 0.0;
+        GameState threadState = simState;
 
         for (int i = 0; i < simulationsPerThread; i++) {
-            GameState threadState = simState;
             threadState.shoe.shuffle();
-
             GameState standState = threadState;
             GameState hitState = threadState;
 

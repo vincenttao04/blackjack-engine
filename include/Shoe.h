@@ -1,12 +1,13 @@
 #ifndef SHOE_H
 #define SHOE_H
 
-#include <vector>
+#include <array>
 
 #include "Card.h"
 
+const int MAX_SIZE = 52;
 struct Shoe {
-    std::vector<Card> cards;
+    std::array<Card, MAX_SIZE> cards;
 
     void initialize(int numberOfDecks);
     void shuffle();

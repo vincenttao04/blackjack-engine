@@ -19,3 +19,4 @@ g++ main.cpp src/\*.cpp -Iinclude -o blackjack  // compile
 - Use smiulation results for reinforcement learning model training
 - Expand decision space (split, double, insurance, etc.)
 - Implement running count and true count
+- array vs vector - stack vs heap
