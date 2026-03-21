@@ -1,7 +1,6 @@
 #include "Shoe.h"
 
 #include <algorithm>
-#include <random>
 
 void Shoe::initialize(const int numberOfDecks) {
     activeSize = 0;
@@ -22,16 +21,12 @@ void Shoe::initialize(const int numberOfDecks) {
     }
 }
 
-void Shoe::shuffle() {
-    std::random_device rd;
-    std::mt19937 rng(rd());
-
-    std::shuffle(cards.begin(), cards.end(), rng);
-}
-
 Card Shoe::draw() {
-    Card card = cards.back();
-    cards.pop_back();
+    std::uniform_int_distribution<int> dist(0, activeSize - 1);
+    int randomIndex = dist(rng);
+
+    Card card = cards[randomIndex];
+    std::swap(cards[randomIndex], cards[activeSize - 1]);
     return card;
 }
 
