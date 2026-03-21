@@ -4,10 +4,11 @@
 #include <array>
 
 #include "Card.h"
+#include "Rules.h"
 
-const int MAX_SIZE = 52;
 struct Shoe {
-    std::array<Card, MAX_SIZE> cards;
+    std::array<Card, Rules::numberOfDecks> cards;
+    int activeSize = 0;
 
     void initialize(int numberOfDecks);
     void shuffle();
