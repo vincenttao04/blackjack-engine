@@ -2,10 +2,10 @@
 #define RULES_H
 
 struct Rules {
-    int numberOfDecks;
-    double penetration;
-    bool dealerHitsSoft17;
-    double blackjackPayout;
+    static constexpr int numberOfDecks = 1;
+    static constexpr double penetration = 0.75;
+    static constexpr bool dealerHitsSoft17 = true;
+    static constexpr double blackjackPayout = 1.5;
 };
 
 #endif
