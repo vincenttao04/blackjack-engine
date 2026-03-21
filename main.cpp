@@ -10,31 +10,25 @@ using namespace std;
 int main() {
     GameState state;
 
-    // Configure game rules
-    state.rules.numberOfDecks = 1;
-    state.rules.penetration = 0.75;
-    state.rules.dealerHitsSoft17 = true;
-    state.rules.blackjackPayout = 1.5;
-
-    state.shoe.initialize(state.rules.numberOfDecks);
+    state.shoe.initialize(Rules::numberOfDecks);
     state.shoe.shuffle();
 
     cout << "========================================" << endl;
     cout << "               BLACKJACK" << endl;
     cout << "========================================" << endl;
-    cout << "Number of decks: " << state.rules.numberOfDecks << endl;
-    cout << "Penetration: " << state.rules.penetration << endl;
-    cout << "Dealer hits soft 17: " << state.rules.dealerHitsSoft17 << endl;
-    cout << "Blackjack payout: " << state.rules.blackjackPayout << endl;
+    cout << "Number of decks: " << Rules::numberOfDecks << endl;
+    cout << "Penetration: " << Rules::penetration << endl;
+    cout << "Dealer hits soft 17: " << Rules::dealerHitsSoft17 << endl;
+    cout << "Blackjack payout: " << Rules::blackjackPayout << endl;
     cout << "----------------------------------------" << endl;
 
     char playAgain = 'y';
     int count = 1;
 
     while (playAgain == 'y') {
-        if (state.shoe.needsReshuffle(state.rules.numberOfDecks,
-                                      state.rules.penetration)) {
-            state.shoe.initialize(state.rules.numberOfDecks);
+        if (state.shoe.needsReshuffle(Rules::numberOfDecks,
+                                      Rules::penetration)) {
+            state.shoe.initialize(Rules::numberOfDecks);
             state.shoe.shuffle();
             cout << "Reshuffling..." << endl;
         };
