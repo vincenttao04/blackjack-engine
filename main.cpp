@@ -11,7 +11,6 @@ int main() {
     GameState state;
 
     state.shoe.initialize();
-    state.shoe.shuffle();
 
     cout << "========================================" << endl;
     cout << "               BLACKJACK" << endl;
@@ -28,7 +27,6 @@ int main() {
     while (playAgain == 'y') {
         if (state.shoe.needsReshuffle()) {
             state.shoe.initialize();
-            state.shoe.shuffle();
             cout << "Reshuffling..." << endl;
         };
 
