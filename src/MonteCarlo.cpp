@@ -27,7 +27,6 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
         GameState threadState = simState;
 
         for (int i = 0; i < simulationsPerThread; i++) {
-            threadState.shoe.shuffle();
             GameState standState = threadState;
             GameState hitState = threadState;
 

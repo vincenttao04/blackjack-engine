@@ -13,7 +13,6 @@ struct Shoe {
     std::mt19937 rng{std::random_device{}()};
 
     void initialize();
-    void shuffle();
     Card draw();
     int remaining() const;
     bool needsReshuffle() const;
