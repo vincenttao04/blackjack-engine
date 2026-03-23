@@ -10,7 +10,7 @@ using namespace std;
 int main() {
     GameState state;
 
-    state.shoe.initialize(Rules::numberOfDecks);
+    state.shoe.initialize();
     state.shoe.shuffle();
 
     cout << "========================================" << endl;
@@ -26,9 +26,8 @@ int main() {
     int count = 1;
 
     while (playAgain == 'y') {
-        if (state.shoe.needsReshuffle(Rules::numberOfDecks,
-                                      Rules::penetration)) {
-            state.shoe.initialize(Rules::numberOfDecks);
+        if (state.shoe.needsReshuffle()) {
+            state.shoe.initialize();
             state.shoe.shuffle();
             cout << "Reshuffling..." << endl;
         };

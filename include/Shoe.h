@@ -8,15 +8,15 @@
 #include "Rules.h"
 
 struct Shoe {
-    std::array<Card, Rules::numberOfDecks * 52> cards;
+    std::array<Card, Rules::numberOfDecks * Rules::cardsPerDeck> cards;
     int activeSize = 0;
     std::mt19937 rng{std::random_device{}()};
 
-    void initialize(int numberOfDecks);
+    void initialize();
     void shuffle();
     Card draw();
     int remaining() const;
-    bool needsReshuffle(int numberOfDecks, double penetration) const;
+    bool needsReshuffle() const;
 };
 
 #endif
