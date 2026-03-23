@@ -38,23 +38,23 @@ void Game::playerTurn(GameState& state) {
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
         auto start = chrono::steady_clock::now();  // temp
-        // auto [standEV, hitEV] = MonteCarlo::simulate(state);  // temp
+        auto [standEV, hitEV] = MonteCarlo::simulate(state);  // temp
         auto end = chrono::steady_clock::now();  // temp
         auto duration =
             chrono::duration_cast<chrono::milliseconds>(end - start);  // temp
         cout << "Time elapsed: " << duration.count() << " milliseconds"
              << endl;  // temp
 
-        // cout << "Advisor: stand EV = " << standEV << ", hit EV = " << hitEV
-        //      << endl;
+        cout << "Advisor: stand EV = " << standEV << ", hit EV = " << hitEV
+             << endl;
 
-        // if (standEV > hitEV) {
-        //     cout << "RECOMMENDATION: " << "STAND" << endl;
-        // } else if (hitEV > standEV) {
-        //     cout << "RECOMMENDATION: " << "HIT" << endl;
-        // } else {
-        //     cout << "RECOMMENDATION: " << "SAME" << endl;
-        // }
+        if (standEV > hitEV) {
+            cout << "RECOMMENDATION: " << "STAND" << endl;
+        } else if (hitEV > standEV) {
+            cout << "RECOMMENDATION: " << "HIT" << endl;
+        } else {
+            cout << "RECOMMENDATION: " << "SAME" << endl;
+        }
 
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
