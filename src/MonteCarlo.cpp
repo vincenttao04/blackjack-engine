@@ -11,9 +11,7 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     GameState simState = state;
 
     // Return dealer's hole card to the deck
-    Card card = simState.dealer.cards.back();
-    simState.dealer.cards.pop_back();
-    simState.shoe.cards.push_back(card);
+    simState.shoe.activeSize++;
 
     const int simulations = 1000000;
     const int threadCount = thread::hardware_concurrency();
