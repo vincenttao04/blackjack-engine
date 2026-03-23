@@ -22,6 +22,7 @@ void Shoe::initialize() {
 }
 
 Card Shoe::draw() {
+    // Fisher-Yates Draw
     std::uniform_int_distribution<int> dist(0, activeSize - 1);
     int randomIndex = dist(rng);
     std::swap(cards[randomIndex], cards[activeSize - 1]);
@@ -33,6 +34,7 @@ int Shoe::remaining() const {
 }
 
 bool Shoe::needsReshuffle() const {
-    int threshold = int(Rules::numberOfDecks * (1 - Rules::penetration) * Rules::cardsPerDeck);
+    int threshold = int(Rules::numberOfDecks * (1 - Rules::penetration) *
+                        Rules::cardsPerDeck);
     return remaining() < threshold;
 }
