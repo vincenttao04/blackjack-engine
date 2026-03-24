@@ -1,13 +1,15 @@
 #include "Game.h"
 
+#include <chrono>  // temp
 #include <iostream>
+#include <thread>  // temp
 
 #include "MonteCarlo.h"
 
 using namespace std;
 
 static void printHand(const Hand& hand) {
-    for (int i = 0; i < hand.cards.size(); i++) {
+    for (int i = 0; i < hand.activeSize; i++) {
         cout << hand.cards[i].value << " ";
     };
     cout << "| " << hand.value() << endl;
@@ -35,7 +37,14 @@ void Game::playerTurn(GameState& state) {
 
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
-        auto [standEV, hitEV] = MonteCarlo::simulate(state);
+        auto start = chrono::steady_clock::now();  // temp
+        auto [standEV, hitEV] = MonteCarlo::simulate(state);  // temp
+        auto end = chrono::steady_clock::now();  // temp
+        auto duration =
+            chrono::duration_cast<chrono::milliseconds>(end - start);  // temp
+        cout << "Time elapsed: " << duration.count() << " milliseconds"
+             << endl;  // temp
+
         cout << "Advisor: stand EV = " << standEV << ", hit EV = " << hitEV
              << endl;
 
@@ -74,7 +83,7 @@ void Game::playDealer(GameState& state) {
     printHand(state.dealer);
 
     while (state.dealer.value() < 17 ||
-           (state.rules.dealerHitsSoft17 && state.dealer.value() == 17 &&
+           (Rules::dealerHitsSoft17 && state.dealer.value() == 17 &&
             state.dealer.isSoft())) {
         state.dealer.addCard(state.shoe.draw());
         cout << "Dealer: ";

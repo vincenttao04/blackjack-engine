@@ -1,13 +1,15 @@
 #ifndef HAND_H
 #define HAND_H
 
+#include <array>
 #include <utility>
-#include <vector>
 
 #include "Card.h"
+#include "Rules.h"
 
 struct Hand {
-    std::vector<Card> cards;
+    std::array<Card, Rules::maxHandSize> cards;
+    int activeSize = 0;
 
    private:
     std::pair<int, int> compute() const;

@@ -1,18 +1,20 @@
 #ifndef SHOE_H
 #define SHOE_H
 
-#include <vector>
+#include <array>
+#include <random>
 
 #include "Card.h"
+#include "Rules.h"
 
 struct Shoe {
-    std::vector<Card> cards;
+    std::array<Card, Rules::numberOfDecks * Rules::cardsPerDeck> cards;
+    int activeSize = 0;
 
-    void initialize(int numberOfDecks);
-    void shuffle();
+    void initialize();
     Card draw();
     int remaining() const;
-    bool needsReshuffle(int numberOfDecks, double penetration) const;
+    bool needsReshuffle() const;
 };
 
 #endif

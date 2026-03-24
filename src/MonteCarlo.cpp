@@ -1,40 +1,72 @@
 #include "MonteCarlo.h"
 
+#include <iostream>  // temp
+#include <mutex>
+#include <thread>
+#include <vector>
+
+using namespace std;
+
 std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     GameState simState = state;
 
-    // Hide dealer's hole card and return it to the deck
-    Card card = simState.dealer.cards.back();
-    simState.dealer.cards.pop_back();
-    simState.shoe.cards.push_back(card);
+    // Return dealer's hole card to the deck
+    simState.shoe.activeSize++;
+    simState.dealer.activeSize--;
 
     const int simulations = 1000000;
+    const int threadCount = (thread::hardware_concurrency() == 0)
+                                ? 4
+                                : thread::hardware_concurrency();
+    cout << "Number of threads: " << threadCount << endl;  // temp
+    const int simulationsPerThread = simulations / threadCount;
     double standEV = 0.0;
     double hitEV = 0.0;
+    mutex mtx;
 
-    for (int i = 0; i < simulations; i++) {
-        simState.shoe.shuffle();
+    auto worker = [&](int simulationsPerThread) {
+        double localStandEV = 0.0;
+        double localHitEV = 0.0;
 
-        GameState standState = simState;
-        GameState hitState = simState;
+        for (int i = 0; i < simulationsPerThread; i++) {
+            GameState threadState = simState; // reset after every simulation
 
-        standEV += simulateStand(standState);
-        hitEV += simulateHit(hitState);
+            GameState standState = threadState;
+            GameState hitState = threadState;
+
+            localStandEV += simulateStand(standState);
+            localHitEV += simulateHit(hitState);
+        };
+
+        // Lock shared data
+        lock_guard<mutex> locK(mtx);
+        standEV += localStandEV;
+        hitEV += localHitEV;
     };
 
-    return {standEV / simulations, hitEV / simulations};
+    vector<thread> threadPool;
+    for (int i = 0; i < threadCount; i++) {
+        threadPool.emplace_back(worker, simulationsPerThread);
+    };
+
+    for (auto& thread : threadPool) {
+        thread.join();
+    }
+
+    return {standEV / (simulationsPerThread * threadCount),
+            hitEV / (simulationsPerThread * threadCount)};
 }
 
 double MonteCarlo::simulateStand(GameState& state) {
-    // Check for blackjack
-    if (state.player.isBlackjack() && !state.dealer.isBlackjack()) {
-        return state.rules.blackjackPayout;
-    }
-
     while (state.dealer.value() < 17 ||
-           (state.rules.dealerHitsSoft17 && state.dealer.value() == 17 &&
+           (Rules::dealerHitsSoft17 && state.dealer.value() == 17 &&
             state.dealer.isSoft())) {
         state.dealer.addCard(state.shoe.draw());
+    }
+
+    // Check for blackjack, after dealer's turn is completed
+    if (state.player.isBlackjack() && !state.dealer.isBlackjack()) {
+        return Rules::blackjackPayout;
     }
 
     int playerValue = state.player.value();
