@@ -10,7 +10,6 @@
 struct Shoe {
     std::array<Card, Rules::numberOfDecks * Rules::cardsPerDeck> cards;
     int activeSize = 0;
-    std::mt19937 rng{std::random_device{}()};
 
     void initialize();
     Card draw();

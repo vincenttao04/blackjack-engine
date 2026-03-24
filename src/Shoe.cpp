@@ -23,6 +23,7 @@ void Shoe::initialize() {
 
 Card Shoe::draw() {
     // Fisher-Yates Draw
+    thread_local std::mt19937 rng{std::random_device{}()};
     std::uniform_int_distribution<int> dist(0, activeSize - 1);
     int randomIndex = dist(rng);
     std::swap(cards[randomIndex], cards[activeSize - 1]);
