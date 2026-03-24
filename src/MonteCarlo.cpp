@@ -15,7 +15,9 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     simState.dealer.activeSize--;
 
     const int simulations = 1000000;
-    const int threadCount = thread::hardware_concurrency();
+    const int threadCount = (thread::hardware_concurrency() == 0)
+                                ? 4
+                                : thread::hardware_concurrency();
     cout << "Number of threads: " << threadCount << endl;  // temp
     const int simulationsPerThread = simulations / threadCount;
     double standEV = 0.0;
@@ -25,9 +27,10 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     auto worker = [&](int simulationsPerThread) {
         double localStandEV = 0.0;
         double localHitEV = 0.0;
-        GameState threadState = simState;
 
         for (int i = 0; i < simulationsPerThread; i++) {
+            GameState threadState = simState; // reset after every simulation
+
             GameState standState = threadState;
             GameState hitState = threadState;
 
