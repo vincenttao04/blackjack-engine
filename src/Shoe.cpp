@@ -1,46 +1,45 @@
 #include "Shoe.h"
 
 #include <algorithm>
-#include <random>
 
-void Shoe::initialize(const int numberOfDecks) {
-    cards.clear();
+void Shoe::initialize() {
+    activeSize = 0;
 
-    for (int deck = 0; deck < numberOfDecks; deck++) {
+    for (int deck = 0; deck < Rules::numberOfDecks; deck++) {
         for (int value = 1; value <= 9; value++) {
             // Each card value (1-9) appears 4 times per deck (one for each
             // suit)
             for (int suit = 0; suit < 4; suit++) {
-                cards.push_back({value});
+                cards[activeSize++] = {value};
             }
         }
 
         // 4 cards with value 10 (10, J, Q, K) * 4 suits = 16 cards per deck
         for (int i = 0; i < 16; i++) {
-            cards.push_back({10});
+            cards[activeSize++] = {10};
         }
     }
 }
 
-void Shoe::shuffle() {
-    static std::random_device rd;
-    static std::mt19937 rng(rd());
-
-    std::shuffle(cards.begin(), cards.end(), rng);
-}
-
 Card Shoe::draw() {
-    Card card = cards.back();
-    cards.pop_back();
-    return card;
+    if (activeSize == 0) {
+        initialize();
+    };  // reshuffle if shoe is empty
+
+    // Fisher-Yates Draw
+    thread_local std::mt19937 rng{std::random_device{}()};
+    std::uniform_int_distribution<int> dist(0, activeSize - 1);
+    int randomIndex = dist(rng);
+    std::swap(cards[randomIndex], cards[activeSize - 1]);
+    return cards[--activeSize];
 }
 
 int Shoe::remaining() const {
-    return cards.size();
+    return activeSize;
 }
 
-bool Shoe::needsReshuffle(int numberOfDecks, double penetration) const {
-    const int CARDS_PER_DECK = 52;
-    int threshold = int(numberOfDecks * (1 - penetration) * CARDS_PER_DECK);
+bool Shoe::needsReshuffle() const {
+    int threshold = int(Rules::numberOfDecks * (1 - Rules::penetration) *
+                        Rules::cardsPerDeck);
     return remaining() < threshold;
 }
