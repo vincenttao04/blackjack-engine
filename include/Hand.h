@@ -1,13 +1,14 @@
 #ifndef HAND_H
 #define HAND_H
 
-#include <utility>
 #include <array>
+#include <utility>
 
 #include "Card.h"
+#include "Rules.h"
 
 struct Hand {
-    std::array<Card, 11> cards;
+    std::array<Card, Rules::maxHandSize> cards;
     int activeSize = 0;
 
    private:
