@@ -22,6 +22,10 @@ void Shoe::initialize() {
 }
 
 Card Shoe::draw() {
+    if (activeSize == 0) {
+        initialize();
+    };  // reshuffle if shoe is empty
+
     // Fisher-Yates Draw
     thread_local std::mt19937 rng{std::random_device{}()};
     std::uniform_int_distribution<int> dist(0, activeSize - 1);
