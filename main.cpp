@@ -2,7 +2,6 @@
 
 #include "Game.h"
 #include "Hand.h"
-#include "Rules.h"
 #include "Shoe.h"
 
 using namespace std;

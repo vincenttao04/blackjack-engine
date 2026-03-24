@@ -12,6 +12,7 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
 
     // Return dealer's hole card to the deck
     simState.shoe.activeSize++;
+    simState.dealer.activeSize--;
 
     const int simulations = 1000000;
     const int threadCount = thread::hardware_concurrency();
@@ -49,7 +50,8 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
         thread.join();
     }
 
-    return {standEV / simulations, hitEV / simulations};
+    return {standEV / (simulationsPerThread * threadCount),
+            hitEV / (simulationsPerThread * threadCount)};
 }
 
 double MonteCarlo::simulateStand(GameState& state) {
