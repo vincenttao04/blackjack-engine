@@ -2,12 +2,13 @@
 #define HAND_H
 
 #include <utility>
-#include <vector>
+#include <array>
 
 #include "Card.h"
 
 struct Hand {
-    std::vector<Card> cards;
+    std::array<Card, 11> cards;
+    int activeSize = 0;
 
    private:
     std::pair<int, int> compute() const;
