@@ -4,12 +4,12 @@ std::pair<int, int> Hand::compute() const {
     int total = 0;
     int aceCount = 0;
 
-    for (const Card& card : cards) {
-        if (card.value == 1) {
+    for (int i = 0; i < activeSize; i++) {
+        if (cards[i].value == 1) {
             aceCount++;
             total += 11;
         } else {
-            total += card.value;
+            total += cards[i].value;
         }
     }
 
@@ -22,7 +22,7 @@ std::pair<int, int> Hand::compute() const {
 }
 
 void Hand::addCard(const Card& card) {
-    cards.push_back(card);
+    cards[activeSize++] = card;
 }
 
 int Hand::value() const {
@@ -39,9 +39,9 @@ bool Hand::isBust() const {
 }
 
 bool Hand::isBlackjack() const {
-    return value() == 21 && cards.size() == 2;
+    return value() == 21 && activeSize == 2;
 }
 
 void Hand::clear() {
-    cards.clear();
+    activeSize = 0;
 }

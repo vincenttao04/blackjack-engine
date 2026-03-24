@@ -9,7 +9,7 @@
 using namespace std;
 
 static void printHand(const Hand& hand) {
-    for (int i = 0; i < hand.cards.size(); i++) {
+    for (int i = 0; i < hand.activeSize; i++) {
         cout << hand.cards[i].value << " ";
     };
     cout << "| " << hand.value() << endl;
