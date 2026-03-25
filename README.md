@@ -6,7 +6,9 @@ A C++ Blackjack strategy engine powered by Monte Carlo simulation. The program a
 
 Given a game state, the engine simulates millions of blackjack rounds and calculates the average outcome of each possible action to recommend the move with the highest EV.
 
-Current number of simulations per decision: 1,000,000
+Current number of simulations per decision: **10,000,000**
+
+Multithreading with 4 CPU cores & stack-based memory allocation: **~17x faster simulation throughput**
 
 ```
 g++ main.cpp src/\*.cpp -Iinclude -o blackjack  // compile
@@ -15,8 +17,6 @@ g++ main.cpp src/\*.cpp -Iinclude -o blackjack  // compile
 
 ## TODO
 
-- Multithreaded simulation to scale Monte Carlo runs into the millions _(in progress)_
-- Use smiulation results for reinforcement learning model training
+- Use simulation results for reinforcement learning model training
 - Expand decision space (split, double, insurance, etc.)
 - Implement running count and true count
-- array vs vector - stack vs heap
