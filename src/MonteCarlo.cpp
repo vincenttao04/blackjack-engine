@@ -29,10 +29,8 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
         double localHitEV = 0.0;
 
         for (int i = 0; i < simulationsPerThread; i++) {
-            GameState threadState = simState; // reset after every simulation
-
-            GameState standState = threadState;
-            GameState hitState = threadState;
+            GameState standState = simState;
+            GameState hitState = simState;
 
             localStandEV += simulateStand(standState);
             localHitEV += simulateHit(hitState);
