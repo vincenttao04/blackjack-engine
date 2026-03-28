@@ -8,6 +8,8 @@
 
 using namespace std;
 
+const int numberOfTests = 100;
+
 void Backtest::autoPlayerTurn(GameState& state) {
     while (true) {
         if (state.player.isBust()) {
@@ -24,11 +26,26 @@ void Backtest::autoPlayerTurn(GameState& state) {
     }
 };
 
+void Backtest::printResults(int wins, int loses, int pushes) {
+    double winRate = 100.0 * wins / numberOfTests;
+    double loseRate = 100.0 * loses / numberOfTests;
+    double pushRate = 100.0 * pushes / numberOfTests;
+    double netEV = (double)(wins - loses) / numberOfTests;
+
+    cout << "========================================" << endl;
+    cout << "BACKTEST RESULTS (" << numberOfTests << " rounds)" << endl;
+    cout << "========================================" << endl;
+    cout << "Wins:   " << wins << " (" << winRate << "%)" << endl;
+    cout << "Losses: " << loses << " (" << loseRate << "%)" << endl;
+    cout << "Pushes: " << pushes << " (" << pushRate << "%)" << endl;
+    cout << "Net EV: " << netEV << endl;
+    cout << "========================================" << endl;
+}
+
 void Backtest::run() {
-    const int numberOfTests = 100;
-    int winCount = 0;
-    int pushCount = 0;
-    int loseCount = 0;
+    int wins = 0;
+    int loses = 0;
+    int pushes = 0;
 
     GameState state;
 
@@ -37,7 +54,6 @@ void Backtest::run() {
     for (int i = 0; i < numberOfTests; i++) {
         if (state.shoe.needsReshuffle()) {
             state.shoe.initialize();
-            cout << "Reshuffling..." << endl;
         };
 
         state.player.clear();
@@ -51,16 +67,19 @@ void Backtest::run() {
         Outcome result = Game::determineOutcome(state);
 
         if (result == Outcome::PlayerWin) {
-            winCount++;
+            wins++;
         };
 
         if (result == Outcome::DealerWin) {
-            loseCount++;
+            loses++;
         };
 
         if (result == Outcome::Push) {
-            pushCount++;
+            pushes++;
         };
     }
+
+    printResults(wins, loses, pushes);
+
     return;
 };

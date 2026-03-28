@@ -9,7 +9,9 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     if (argc > 1 && string(argv[1]) == "--backtest") {
-        cout << "backtest start" << endl;
+        cout << "========================================" << endl;
+        cout << "               BACKTESTS" << endl;
+        cout << "========================================" << endl;
     } else {
         GameState state;
 
