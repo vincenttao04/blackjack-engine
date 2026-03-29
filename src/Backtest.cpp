@@ -62,7 +62,9 @@ void Backtest::run() {
         Game::dealInitialCards(state);
         autoPlayerTurn(state);
 
-        Game::playDealer(state);
+        if (!state.player.isBust()) {
+            Game::playDealer(state);
+        }
 
         Outcome result = Game::determineOutcome(state);
 
