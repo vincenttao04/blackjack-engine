@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const int numberOfTests = 100;
+const int numberOfTests = 500;
 
 void Backtest::autoPlayerTurn(GameState& state) {
     while (true) {
@@ -19,9 +19,9 @@ void Backtest::autoPlayerTurn(GameState& state) {
         auto [standEV, hitEV] = MonteCarlo::simulate(state);
 
         if (standEV >= hitEV) {
-            state.player.addCard(state.shoe.draw());
-        } else {
             return;
+        } else {
+            Game::playerHit(state);
         }
     }
 };
@@ -80,8 +80,8 @@ void Backtest::run() {
 
         // Print progress every 10% of tests completed
         if ((i + 1) % (numberOfTests / 10) == 0) {
-            cout << "Completed " << (i + 1) << "/" << numberOfTests
-                 << " tests..." << endl;
+            cout << "Completed " << (i + 1) << "/" << numberOfTests << " tests"
+                 << endl;
         }
     }
 
