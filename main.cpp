@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 
+#include "Backtest.h"
 #include "Game.h"
 #include "Hand.h"
 #include "Shoe.h"
@@ -12,6 +13,7 @@ int main(int argc, char* argv[]) {
         cout << "========================================" << endl;
         cout << "               BACKTESTS" << endl;
         cout << "========================================" << endl;
+        Backtest::run();
     } else {
         GameState state;
 
