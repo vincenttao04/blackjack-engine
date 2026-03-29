@@ -26,6 +26,14 @@ void Backtest::autoPlayerTurn(GameState& state) {
     }
 };
 
+void Backtest::autoDealerTurn(GameState& state) {
+    while (state.dealer.value() < 17 ||
+           (Rules::dealerHitsSoft17 && state.dealer.value() == 17 &&
+            state.dealer.isSoft())) {
+        state.dealer.addCard(state.shoe.draw());
+    }
+};
+
 void Backtest::printResults(int wins, int loses, int pushes) {
     double winRate = 100.0 * wins / numberOfTests;
     double loseRate = 100.0 * loses / numberOfTests;
@@ -63,7 +71,7 @@ void Backtest::run() {
         autoPlayerTurn(state);
 
         if (!state.player.isBust()) {
-            Game::playDealer(state);
+            autoDealerTurn(state);
         }
 
         Outcome result = Game::determineOutcome(state);
