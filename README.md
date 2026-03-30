@@ -13,10 +13,11 @@ Multithreading with 4 CPU cores & stack-based memory allocation: **~17x faster s
 ```
 g++ main.cpp src/\*.cpp -Iinclude -o blackjack  // compile
 .\blackjack                                     // run
+.\blackjack --backtest                          // backtest
 ```
 
 ## TODO
 
+- Expand decision space (split, double, insurance, etc.) - (in progress)
 - Use simulation results for reinforcement learning model training
-- Expand decision space (split, double, insurance, etc.)
 - Implement running count and true count

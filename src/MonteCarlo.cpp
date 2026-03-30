@@ -1,6 +1,5 @@
 #include "MonteCarlo.h"
 
-#include <iostream>  // temp
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -18,7 +17,6 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     const int threadCount = (thread::hardware_concurrency() == 0)
                                 ? 4
                                 : thread::hardware_concurrency();
-    cout << "Number of threads: " << threadCount << endl;  // temp
     const int simulationsPerThread = simulations / threadCount;
     double standEV = 0.0;
     double hitEV = 0.0;
