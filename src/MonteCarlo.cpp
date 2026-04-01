@@ -13,7 +13,7 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     simState.shoe.activeSize++;
     simState.dealer.activeSize--;
 
-    const int simulations = 10000000;
+    const int simulations = 100000;
     const int threadCount = (thread::hardware_concurrency() == 0)
                                 ? 4
                                 : thread::hardware_concurrency();

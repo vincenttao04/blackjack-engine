@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const int numberOfTests = 500;
+const int numberOfTests = 10000;
 
 void Backtest::autoPlayerTurn(GameState& state) {
     while (true) {
