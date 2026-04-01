@@ -63,9 +63,6 @@ void Backtest::run() {
             state.shoe.initialize();
         };
 
-        state.player.clear();
-        state.dealer.clear();
-
         Game::dealInitialCards(state);
         autoPlayerTurn(state);
 

@@ -16,6 +16,9 @@ static void printHand(const Hand& hand) {
 }
 
 void Game::dealInitialCards(GameState& state) {
+    state.player.clear();
+    state.dealer.clear();
+
     state.player.addCard(state.shoe.draw());
     state.dealer.addCard(state.shoe.draw());
 
@@ -37,9 +40,9 @@ void Game::playerTurn(GameState& state) {
 
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
-        auto start = chrono::steady_clock::now();  // temp
+        auto start = chrono::steady_clock::now();             // temp
         auto [standEV, hitEV] = MonteCarlo::simulate(state);  // temp
-        auto end = chrono::steady_clock::now();  // temp
+        auto end = chrono::steady_clock::now();               // temp
         auto duration =
             chrono::duration_cast<chrono::milliseconds>(end - start);  // temp
         cout << "Time elapsed: " << duration.count() << " milliseconds"
@@ -129,9 +132,6 @@ void Game::playerHit(GameState& state) {
 };
 
 void Game::playRound(GameState& state) {
-    state.player.clear();
-    state.dealer.clear();
-
     dealInitialCards(state);
 
     cout << "Dealer: " << state.dealer.cards[0].value << " ?" << endl;
