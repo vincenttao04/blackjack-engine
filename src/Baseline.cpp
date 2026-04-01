@@ -36,7 +36,7 @@ void Baseline::run() {
 
     for (int i = 0; i < numberOfTests; i++) {
         if (state.shoe.needsReshuffle()) {
-            state.shoe.activeSize == 0;
+            state.shoe.initialize();
         };
 
         Game::dealInitialCards(state);
@@ -46,6 +46,20 @@ void Baseline::run() {
             autoDealerTurn(state);
         }
 
-        Game::determineOutcome(state);
+        Outcome result = Game::determineOutcome(state);
+
+        if (result == Outcome::PlayerWin) {
+            wins++;
+        };
+
+        if (result == Outcome::DealerWin) {
+            loses++;
+        };
+
+        if (result == Outcome::Push) {
+            pushes++;
+        };
     }
+
+    
 };
