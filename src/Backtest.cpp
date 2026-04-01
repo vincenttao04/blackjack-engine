@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "Game.h"
-#include "GameState.h"
 #include "MonteCarlo.h"
 
 using namespace std;
