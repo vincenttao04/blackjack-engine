@@ -11,8 +11,7 @@ const int numberOfTests = 10000;
 
 void Baseline::autoPlayerTurn(GameState& state) {
     while (state.player.value() < 17 ||
-           (Rules::dealerHitsSoft17 && state.player.value() == 17 &&
-            state.player.isSoft())) {
+           (state.player.value() == 17 && state.player.isSoft())) {
         state.player.addCard(state.shoe.draw());
     }
 };
