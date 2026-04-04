@@ -25,6 +25,22 @@ void Baseline::autoDealerTurn(GameState& state) {
     }
 };
 
+void Baseline::printResults(int wins, int loses, int pushes) {
+    double winRate = 100.0 * wins / numberOfTests;
+    double loseRate = 100.0 * loses / numberOfTests;
+    double pushRate = 100.0 * pushes / numberOfTests;
+    double netEV = (double)(wins - loses) / numberOfTests;
+
+    cout << "========================================" << endl;
+    cout << "BACKTEST RESULTS (" << numberOfTests << " rounds)" << endl;
+    cout << "========================================" << endl;
+    cout << "Wins:   " << wins << " (" << winRate << "%)" << endl;
+    cout << "Losses: " << loses << " (" << loseRate << "%)" << endl;
+    cout << "Pushes: " << pushes << " (" << pushRate << "%)" << endl;
+    cout << "Net EV: " << netEV << endl;
+    cout << "========================================" << endl;
+}
+
 void Baseline::run() {
     int wins = 0;
     int loses = 0;
@@ -60,6 +76,5 @@ void Baseline::run() {
             pushes++;
         };
     }
-
-    
+    printResults(wins, loses, pushes);
 };
