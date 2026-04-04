@@ -1,5 +1,6 @@
 #include "MonteCarlo.h"
 
+#include <iostream>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -7,12 +8,6 @@
 using namespace std;
 
 std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
-    GameState simState = state;
-
-    // Return dealer's hole card to the deck
-    simState.shoe.activeSize++;
-    simState.dealer.activeSize--;
-
     const int simulations = 100000;
     const int threadCount = (thread::hardware_concurrency() == 0)
                                 ? 4
@@ -27,8 +22,8 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
         double localHitEV = 0.0;
 
         for (int i = 0; i < simulationsPerThread; i++) {
-            GameState standState = simState;
-            GameState hitState = simState;
+            GameState standState = state;
+            GameState hitState = state;
 
             localStandEV += simulateStand(standState);
             localHitEV += simulateHit(hitState);

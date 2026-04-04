@@ -24,6 +24,9 @@ void Game::dealInitialCards(GameState& state) {
 
     state.player.addCard(state.shoe.draw());
     state.dealer.addCard(state.shoe.draw());
+
+    // Hole card is the last drawn card, sitting just outside activeSize
+    state.holeCardIndex = state.shoe.activeSize;
 };
 
 void Game::playerTurn(GameState& state) {
@@ -40,9 +43,16 @@ void Game::playerTurn(GameState& state) {
 
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
-        auto start = chrono::steady_clock::now();             // temp
-        auto [standEV, hitEV] = MonteCarlo::simulate(state);  // temp
-        auto end = chrono::steady_clock::now();               // temp
+        auto start = chrono::steady_clock::now();  // temp
+
+        GameState simState = state;
+        swap(simState.shoe.cards[state.holeCardIndex],
+             simState.shoe.cards[simState.shoe.activeSize]);
+        simState.shoe.activeSize++;
+        simState.dealer.activeSize--;
+        auto [standEV, hitEV] = MonteCarlo::simulate(simState);
+
+        auto end = chrono::steady_clock::now();  // temp
         auto duration =
             chrono::duration_cast<chrono::milliseconds>(end - start);  // temp
         cout << "Time elapsed: " << duration.count() << " milliseconds"
