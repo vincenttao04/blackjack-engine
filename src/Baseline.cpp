@@ -75,6 +75,15 @@ void Baseline::run() {
         if (result == Outcome::Push) {
             pushes++;
         };
+
+        // Print progress every 10% of tests completed
+        if ((i + 1) % (numberOfTests / 10) == 0) {
+            cout << "Completed " << (i + 1) << "/" << numberOfTests << " tests"
+                 << endl;
+        }
     }
+
     printResults(wins, loses, pushes);
+
+    return;
 };
