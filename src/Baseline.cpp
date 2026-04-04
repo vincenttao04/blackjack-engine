@@ -3,16 +3,15 @@
 #include <iostream>
 
 #include "Game.h"
-#include "MonteCarlo.h"
 
 using namespace std;
 
-const int numberOfTests = 10000;
+const int numberOfTests = 100000;
 
 void Baseline::autoPlayerTurn(GameState& state) {
     while (state.player.value() < 17 ||
            (state.player.value() == 17 && state.player.isSoft())) {
-        state.player.addCard(state.shoe.draw());
+        Game::playerHit(state);
     }
 };
 
@@ -31,7 +30,7 @@ void Baseline::printResults(int wins, int loses, int pushes) {
     double netEV = (double)(wins - loses) / numberOfTests;
 
     cout << "========================================" << endl;
-    cout << "BACKTEST RESULTS (" << numberOfTests << " rounds)" << endl;
+    cout << "BASELINE RESULTS (" << numberOfTests << " rounds)" << endl;
     cout << "========================================" << endl;
     cout << "Wins:   " << wins << " (" << winRate << "%)" << endl;
     cout << "Losses: " << loses << " (" << loseRate << "%)" << endl;
