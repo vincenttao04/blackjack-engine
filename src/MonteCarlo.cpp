@@ -1,19 +1,28 @@
 #include "MonteCarlo.h"
 
+#include <iostream>
 #include <mutex>
 #include <thread>
 #include <vector>
 
 using namespace std;
 
-std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
+GameState MonteCarlo::prepareSimState(const GameState& state) {
     GameState simState = state;
 
-    // Return dealer's hole card to the deck
+    // Move hole card back into shoe for simulation
+    swap(simState.shoe.cards[simState.holeCardIndex],
+         simState.shoe.cards[simState.shoe.activeSize]);
     simState.shoe.activeSize++;
     simState.dealer.activeSize--;
 
-    const int simulations = 10000000;
+    return simState;
+}
+
+std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
+    GameState simState = prepareSimState(state);
+
+    const int simulations = 100000;
     const int threadCount = (thread::hardware_concurrency() == 0)
                                 ? 4
                                 : thread::hardware_concurrency();

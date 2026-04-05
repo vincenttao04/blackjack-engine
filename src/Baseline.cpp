@@ -1,31 +1,21 @@
-#include "Backtest.h"
+#include "Baseline.h"
 
 #include <iostream>
 
 #include "Game.h"
-#include "MonteCarlo.h"
 
 using namespace std;
 
-const int numberOfTests = 10000;
+const int numberOfTests = 100000;
 
-void Backtest::autoPlayerTurn(GameState& state) {
-    while (true) {
-        if (state.player.isBust()) {
-            break;
-        }
-
-        auto [standEV, hitEV] = MonteCarlo::simulate(state);
-
-        if (standEV >= hitEV) {
-            return;
-        } else {
-            Game::playerHit(state);
-        }
+void Baseline::autoPlayerTurn(GameState& state) {
+    while (state.player.value() < 17 ||
+           (state.player.value() == 17 && state.player.isSoft())) {
+        Game::playerHit(state);
     }
 };
 
-void Backtest::autoDealerTurn(GameState& state) {
+void Baseline::autoDealerTurn(GameState& state) {
     while (state.dealer.value() < 17 ||
            (Rules::dealerHitsSoft17 && state.dealer.value() == 17 &&
             state.dealer.isSoft())) {
@@ -33,14 +23,14 @@ void Backtest::autoDealerTurn(GameState& state) {
     }
 };
 
-void Backtest::printResults(int wins, int loses, int pushes) {
+void Baseline::printResults(int wins, int loses, int pushes) {
     double winRate = 100.0 * wins / numberOfTests;
     double loseRate = 100.0 * loses / numberOfTests;
     double pushRate = 100.0 * pushes / numberOfTests;
     double netEV = (double)(wins - loses) / numberOfTests;
 
     cout << "========================================" << endl;
-    cout << "BACKTEST RESULTS (" << numberOfTests << " rounds)" << endl;
+    cout << "BASELINE RESULTS (" << numberOfTests << " rounds)" << endl;
     cout << "========================================" << endl;
     cout << "Wins:   " << wins << " (" << winRate << "%)" << endl;
     cout << "Losses: " << loses << " (" << loseRate << "%)" << endl;
@@ -49,7 +39,7 @@ void Backtest::printResults(int wins, int loses, int pushes) {
     cout << "========================================" << endl;
 }
 
-void Backtest::run() {
+void Baseline::run() {
     int wins = 0;
     int loses = 0;
     int pushes = 0;

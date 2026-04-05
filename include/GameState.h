@@ -9,6 +9,8 @@ struct GameState {
     Hand dealer;
 
     Shoe shoe;
+
+    int holeCardIndex = -1;
 };
 
 #endif
