@@ -7,7 +7,21 @@
 
 using namespace std;
 
+GameState MonteCarlo::prepareSimState(const GameState& state) {
+    GameState simState = state;
+
+    // Move hole card back into shoe for simulation
+    swap(simState.shoe.cards[simState.holeCardIndex],
+         simState.shoe.cards[simState.shoe.activeSize]);
+    simState.shoe.activeSize++;
+    simState.dealer.activeSize--;
+
+    return simState;
+}
+
 std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
+    GameState simState = prepareSimState(state);
+
     const int simulations = 100000;
     const int threadCount = (thread::hardware_concurrency() == 0)
                                 ? 4
@@ -22,8 +36,8 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
         double localHitEV = 0.0;
 
         for (int i = 0; i < simulationsPerThread; i++) {
-            GameState standState = state;
-            GameState hitState = state;
+            GameState standState = simState;
+            GameState hitState = simState;
 
             localStandEV += simulateStand(standState);
             localHitEV += simulateHit(hitState);

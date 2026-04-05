@@ -45,12 +45,7 @@ void Game::playerTurn(GameState& state) {
              << endl;
         auto start = chrono::steady_clock::now();  // temp
 
-        GameState simState = state;
-        swap(simState.shoe.cards[state.holeCardIndex],
-             simState.shoe.cards[simState.shoe.activeSize]);
-        simState.shoe.activeSize++;
-        simState.dealer.activeSize--;
-        auto [standEV, hitEV] = MonteCarlo::simulate(simState);
+        auto [standEV, hitEV] = MonteCarlo::simulate(state);
 
         auto end = chrono::steady_clock::now();  // temp
         auto duration =
