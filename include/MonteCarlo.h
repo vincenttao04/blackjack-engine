@@ -1,8 +1,6 @@
 #ifndef MONTECARLO_H
 #define MONTECARLO_H
 
-#include <utility>
-
 #include "GameState.h"
 
 class MonteCarlo {

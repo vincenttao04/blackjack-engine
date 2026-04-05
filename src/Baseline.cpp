@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const int numberOfTests = 10000000000;
+const int numberOfTests = 100000;
 
 void Baseline::autoPlayerTurn(GameState& state) {
     while (state.player.value() < 17 ||
