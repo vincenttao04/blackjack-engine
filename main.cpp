@@ -2,6 +2,7 @@
 #include <string>
 
 #include "Backtest.h"
+#include "Baseline.h"
 #include "Game.h"
 #include "Hand.h"
 #include "Shoe.h"
@@ -14,6 +15,11 @@ int main(int argc, char* argv[]) {
         cout << "               BACKTESTS" << endl;
         cout << "========================================" << endl;
         Backtest::run();
+    } else if (argc > 1 && string(argv[1]) == "--baseline") {
+        cout << "========================================" << endl;
+        cout << "               BASELINE" << endl;
+        cout << "========================================" << endl;
+        Baseline::run();
     } else {
         GameState state;
 
