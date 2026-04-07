@@ -62,9 +62,7 @@ void Backtest::run(Strategy strategy, int rounds) {
         while (!state.player.isBust()) {
             Action action = strategy(state);
 
-            if (action == Action::Stand) {
-                break;
-            }
+            if (action == Action::Stand) break;
 
             if (action == Action::Hit) {
                 Game::playerHit(state);
@@ -74,9 +72,7 @@ void Backtest::run(Strategy strategy, int rounds) {
             break;
         }
 
-        if (!state.player.isBust()) {
-            autoDealerTurn(state);
-        }
+        if (!state.player.isBust()) autoDealerTurn(state);
 
         Outcome result = Game::determineOutcome(state);
         if (result == Outcome::PlayerWin) wins++;
