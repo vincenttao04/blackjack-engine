@@ -2,7 +2,6 @@
 #include <string>
 
 #include "Backtest.h"
-#include "Baseline.h"
 #include "Game.h"
 #include "Hand.h"
 #include "Shoe.h"
@@ -12,14 +11,14 @@ using namespace std;
 int main(int argc, char* argv[]) {
     if (argc > 1 && string(argv[1]) == "--backtest") {
         cout << "========================================" << endl;
-        cout << "               BACKTESTS" << endl;
+        cout << "               BACKTEST" << endl;
         cout << "========================================" << endl;
-        Backtest::run();
+        Backtest::run(Strategy::monteCarlo);
     } else if (argc > 1 && string(argv[1]) == "--baseline") {
         cout << "========================================" << endl;
         cout << "               BASELINE" << endl;
         cout << "========================================" << endl;
-        Baseline::run();
+        Backtest::run(Strategy::baseline, 100000);
     } else {
         GameState state;
 
