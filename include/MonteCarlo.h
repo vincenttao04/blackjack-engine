@@ -2,10 +2,11 @@
 #define MONTECARLO_H
 
 #include "GameState.h"
+#include "engine/EVResult.h"
 
 class MonteCarlo {
    public:
-    static std::pair<double, double> simulate(const GameState& state);
+    static EVResult simulate(const GameState& state);
 
    private:
     static GameState prepareSimState(const GameState& state);

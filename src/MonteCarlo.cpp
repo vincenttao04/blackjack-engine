@@ -19,7 +19,7 @@ GameState MonteCarlo::prepareSimState(const GameState& state) {
     return simState;
 }
 
-std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
+EVResult MonteCarlo::simulate(const GameState& state) {
     GameState simState = prepareSimState(state);
 
     const int simulations = 100000;
@@ -53,13 +53,15 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     for (int i = 0; i < threadCount; i++) {
         threadPool.emplace_back(worker, simulationsPerThread);
     };
-
     for (auto& thread : threadPool) {
         thread.join();
     }
 
-    return {standEV / (simulationsPerThread * threadCount),
-            hitEV / (simulationsPerThread * threadCount)};
+    int total = simulationsPerThread * threadCount;
+    EVResult result;
+    result.stand = standEV / total;
+    result.hit = hitEV / total;
+    return result;
 }
 
 double MonteCarlo::simulateStand(GameState& state) {
