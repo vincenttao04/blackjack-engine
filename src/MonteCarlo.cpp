@@ -58,10 +58,10 @@ EVResult MonteCarlo::simulate(const GameState& state) {
     }
 
     int total = simulationsPerThread * threadCount;
-    EVResult result;
-    result.stand = standEV / total;
-    result.hit = hitEV / total;
-    return result;
+    EVResult ev;
+    ev.stand = standEV / total;
+    ev.hit = hitEV / total;
+    return ev;
 }
 
 double MonteCarlo::simulateStand(GameState& state) {
