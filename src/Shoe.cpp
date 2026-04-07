@@ -6,18 +6,13 @@ void Shoe::initialize() {
     activeSize = 0;
 
     for (int deck = 0; deck < Rules::numberOfDecks; deck++) {
+        // Each card value (1-9) appears 4 times per deck (1 for each suit)
         for (int value = 1; value <= 9; value++) {
-            // Each card value (1-9) appears 4 times per deck (one for each
-            // suit)
-            for (int suit = 0; suit < 4; suit++) {
-                cards[activeSize++] = {value};
-            }
+            for (int suit = 0; suit < 4; suit++) cards[activeSize++] = {value};
         }
 
         // 4 cards with value 10 (10, J, Q, K) * 4 suits = 16 cards per deck
-        for (int i = 0; i < 16; i++) {
-            cards[activeSize++] = {10};
-        }
+        for (int i = 0; i < 16; i++) cards[activeSize++] = {10};
     }
 }
 
