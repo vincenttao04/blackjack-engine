@@ -15,9 +15,10 @@ void Backtest::autoPlayerTurn(GameState& state) {
             break;
         }
 
-        auto [standEV, hitEV] = MonteCarlo::simulate(state);
+        EVResult ev = MonteCarlo::simulate(state);
+        Action recommended = ev.bestAction();
 
-        if (standEV >= hitEV) {
+        if (recommended == Action::Stand) {
             return;
         } else {
             Game::playerHit(state);
