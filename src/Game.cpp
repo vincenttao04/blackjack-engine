@@ -1,10 +1,8 @@
 #include "Game.h"
 
-#include <chrono>  // temp
 #include <iostream>
-#include <thread>  // temp
 
-#include "MonteCarlo.h"
+#include "engine/MonteCarlo.h"
 
 using namespace std;
 
@@ -43,22 +41,16 @@ void Game::playerTurn(GameState& state) {
 
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
-        auto start = chrono::steady_clock::now();  // temp
 
-        auto [standEV, hitEV] = MonteCarlo::simulate(state);
+        EVResult ev = MonteCarlo::simulate(state);
+        Action recommended = ev.bestAction();
 
-        auto end = chrono::steady_clock::now();  // temp
-        auto duration =
-            chrono::duration_cast<chrono::milliseconds>(end - start);  // temp
-        cout << "Time elapsed: " << duration.count() << " milliseconds"
-             << endl;  // temp
-
-        cout << "Advisor: stand EV = " << standEV << ", hit EV = " << hitEV
+        cout << "Advisor: stand EV = " << ev.stand << ", hit EV = " << ev.hit
              << endl;
 
-        if (standEV > hitEV) {
+        if (recommended == Action::Stand) {
             cout << "RECOMMENDATION: " << "STAND" << endl;
-        } else if (hitEV > standEV) {
+        } else if (recommended == Action::Hit) {
             cout << "RECOMMENDATION: " << "HIT" << endl;
         } else {
             cout << "RECOMMENDATION: " << "SAME" << endl;
@@ -77,9 +69,7 @@ void Game::playerTurn(GameState& state) {
                 playerHit(state);
                 break;
             }
-            if (action == 's') {
-                return;
-            }
+            if (action == 's') return;
 
             cout << "Invalid input" << endl;
         }
@@ -105,29 +95,13 @@ Outcome Game::determineOutcome(const GameState& state) {
     bool playerBlackjack = state.player.isBlackjack();
     bool dealerBlackjack = state.dealer.isBlackjack();
 
-    if (playerBlackjack && !dealerBlackjack) {
-        return Outcome::PlayerWin;
-    }
+    if (playerBlackjack && !dealerBlackjack) return Outcome::PlayerWin;
+    if (dealerBlackjack && !playerBlackjack) return Outcome::DealerWin;
 
-    if (dealerBlackjack && !playerBlackjack) {
-        return Outcome::DealerWin;
-    }
-
-    if (state.player.isBust()) {
-        return Outcome::DealerWin;
-    };
-
-    if (state.dealer.isBust()) {
-        return Outcome::PlayerWin;
-    };
-
-    if (playerValue > dealerValue) {
-        return Outcome::PlayerWin;
-    };
-
-    if (dealerValue > playerValue) {
-        return Outcome::DealerWin;
-    };
+    if (state.player.isBust()) return Outcome::DealerWin;
+    if (state.dealer.isBust()) return Outcome::PlayerWin;
+    if (playerValue > dealerValue) return Outcome::PlayerWin;
+    if (dealerValue > playerValue) return Outcome::DealerWin;
 
     return Outcome::Push;
 };
@@ -143,9 +117,7 @@ void Game::playRound(GameState& state) {
 
     playerTurn(state);
 
-    if (!state.player.isBust()) {
-        Game::playDealer(state);
-    }
+    if (!state.player.isBust()) Game::playDealer(state);
 
     Outcome result = Game::determineOutcome(state);
 
@@ -156,16 +128,8 @@ void Game::playRound(GameState& state) {
     cout << "Dealer: ";
     printHand(state.dealer);
 
-    if (result == Outcome::PlayerWin) {
-        cout << "Result: Player wins" << endl;
-    };
-
-    if (result == Outcome::DealerWin) {
-        cout << "Result: Dealer wins" << endl;
-    };
-
-    if (result == Outcome::Push) {
-        cout << "Result: Push" << endl;
-    };
+    if (result == Outcome::PlayerWin) cout << "Result: Player wins" << endl;
+    if (result == Outcome::DealerWin) cout << "Result: Dealer wins" << endl;
+    if (result == Outcome::Push) cout << "Result: Push" << endl;
     cout << "========================================" << endl;
 };

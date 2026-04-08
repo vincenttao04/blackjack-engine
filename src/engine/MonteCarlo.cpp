@@ -1,4 +1,4 @@
-#include "MonteCarlo.h"
+#include "engine/MonteCarlo.h"
 
 #include <iostream>
 #include <mutex>
@@ -19,7 +19,7 @@ GameState MonteCarlo::prepareSimState(const GameState& state) {
     return simState;
 }
 
-std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
+EVResult MonteCarlo::simulate(const GameState& state) {
     GameState simState = prepareSimState(state);
 
     const int simulations = 100000;
@@ -50,16 +50,15 @@ std::pair<double, double> MonteCarlo::simulate(const GameState& state) {
     };
 
     vector<thread> threadPool;
-    for (int i = 0; i < threadCount; i++) {
+    for (int i = 0; i < threadCount; i++)
         threadPool.emplace_back(worker, simulationsPerThread);
-    };
+    for (auto& thread : threadPool) thread.join();
 
-    for (auto& thread : threadPool) {
-        thread.join();
-    }
-
-    return {standEV / (simulationsPerThread * threadCount),
-            hitEV / (simulationsPerThread * threadCount)};
+    int total = simulationsPerThread * threadCount;
+    EVResult ev;
+    ev.stand = standEV / total;
+    ev.hit = hitEV / total;
+    return ev;
 }
 
 double MonteCarlo::simulateStand(GameState& state) {
@@ -70,9 +69,8 @@ double MonteCarlo::simulateStand(GameState& state) {
     }
 
     // Check for blackjack, after dealer's turn is completed
-    if (state.player.isBlackjack() && !state.dealer.isBlackjack()) {
+    if (state.player.isBlackjack() && !state.dealer.isBlackjack())
         return Rules::blackjackPayout;
-    }
 
     int playerValue = state.player.value();
     int dealerValue = state.dealer.value();
@@ -89,17 +87,13 @@ double MonteCarlo::simulateStand(GameState& state) {
 double MonteCarlo::simulateHit(GameState& state) {
     state.player.addCard(state.shoe.draw());
 
-    if (state.player.isBust()) {
-        return -1.0;
-    };
+    if (state.player.isBust()) return -1.0;
 
     return simulateDecision(state);
 }
 
 double MonteCarlo::simulateDecision(GameState& hitState) {
-    if (hitState.player.value() >= 21) {
-        return simulateStand(hitState);
-    }
+    if (hitState.player.value() >= 21) return simulateStand(hitState);
 
     GameState standState = hitState;
     GameState nextHitState = hitState;

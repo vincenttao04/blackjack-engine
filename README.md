@@ -11,9 +11,10 @@ Current number of simulations per decision: **10,000,000**
 Multithreading with 4 CPU cores & stack-based memory allocation: **~17x faster simulation throughput**
 
 ```
-g++ main.cpp src/\*.cpp -Iinclude -o blackjack  // compile
-.\blackjack                                     // run
-.\blackjack --backtest                          // backtest
+g++ main.cpp src/*.cpp src/engine/*.cpp -Iinclude -o blackjack  // compile
+.\blackjack                                                     // run
+.\blackjack --backtest                                          // test using montecarlo
+.\blackjack --baseline                                          // test using basic strategy
 ```
 
 ## TODO
