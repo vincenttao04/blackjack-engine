@@ -22,14 +22,14 @@ GameState MonteCarlo::prepareSimState(const GameState& state) {
 EVResult MonteCarlo::simulate(const GameState& state) {
     GameState simState = prepareSimState(state);
 
-    const int simulations = 100000;
+    const int minSimulations = 10000;
     const int maxSimulations = 10000000;
     const double epsilon = 0.001;
 
     const int detectedThreads = thread::hardware_concurrency();
     // const int threadCount = (detectedThreads <= 1) ? 1 : detectedThreads - 1;
     const int threadCount = 1;
-    const int simulationsPerThread = simulations / threadCount;
+    // const int simulationsPerThread = simulations / threadCount;
 
     // double standEV = 0.0;
     // double hitEV = 0.0;
@@ -38,6 +38,7 @@ EVResult MonteCarlo::simulate(const GameState& state) {
     mutex mtx;
 
     if (threadCount == 1) {
+        // Single core path
         double totalStand = 0.0, prevStand = 0.0;
         double totalHit = 0.0, prevHit = 0.0;
         int n = 0;
@@ -54,7 +55,7 @@ EVResult MonteCarlo::simulate(const GameState& state) {
                 double currentStand = totalStand / n;
                 double currentHit = totalHit / n;
 
-                if (n >= simulations &&
+                if (n >= minSimulations &&
                     abs(currentStand - prevStand) < epsilon &&
                     abs(currentHit - prevHit) < epsilon) {
                     break;
@@ -68,6 +69,8 @@ EVResult MonteCarlo::simulate(const GameState& state) {
         ev.stand = totalStand / n;
         ev.hit = totalHit / n;
         // cout << "Simulations: " << n << ", Threads: " << threadCount << endl;
+    } else {
+        // Multi core path
     }
 
     // auto worker = [&](int simulationsPerThread) {
