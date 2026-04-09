@@ -23,10 +23,13 @@ EVResult MonteCarlo::simulate(const GameState& state) {
     GameState simState = prepareSimState(state);
 
     const int simulations = 100000;
-    const int threadCount = (thread::hardware_concurrency() == 0)
-                                ? 4
-                                : thread::hardware_concurrency();
+    const int maxSimulations = 10000000;
+
+    const int detectedThreads = thread::hardware_concurrency();
+    const int threadCount = (detectedThreads <= 1) ? 1 : detectedThreads - 1;
+    
     const int simulationsPerThread = simulations / threadCount;
+
     double standEV = 0.0;
     double hitEV = 0.0;
     mutex mtx;
