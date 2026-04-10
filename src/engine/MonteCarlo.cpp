@@ -27,20 +27,18 @@ EVResult MonteCarlo::simulate(const GameState& state) {
     const double epsilon = 0.001;
 
     const int detectedThreads = thread::hardware_concurrency();
-    // const int threadCount = (detectedThreads <= 1) ? 1 : detectedThreads - 1;
-    const int threadCount = 1;
-    // const int simulationsPerThread = simulations / threadCount;
+    const int threadCount = (detectedThreads <= 1) ? 1 : detectedThreads;
 
-    // double standEV = 0.0;
-    // double hitEV = 0.0;
+    double totalStand = 0.0;
+    double totalHit = 0.0;
     EVResult ev;
-
-    mutex mtx;
 
     if (threadCount == 1) {
         // Single core path
-        double totalStand = 0.0, prevStand = 0.0;
-        double totalHit = 0.0, prevHit = 0.0;
+        // double totalStand = 0.0, prevStand = 0.0;
+        // double totalHit = 0.0, prevHit = 0.0;
+        double prevStand = 0.0;
+        double prevHit = 0.0;
         int n = 0;
 
         while (n < maxSimulations) {
@@ -68,37 +66,38 @@ EVResult MonteCarlo::simulate(const GameState& state) {
 
         ev.stand = totalStand / n;
         ev.hit = totalHit / n;
-        // cout << "Simulations: " << n << ", Threads: " << threadCount << endl;
     } else {
         // Multi core path
+        const int simulationsPerThread = maxSimulations / threadCount;
+        mutex mtx;
+
+        auto worker = [&](int simulationsPerThread) {
+            double localStandEV = 0.0;
+            double localHitEV = 0.0;
+
+            for (int i = 0; i < simulationsPerThread; i++) {
+                GameState standState = simState;
+                GameState hitState = simState;
+
+                localStandEV += simulateStand(standState);
+                localHitEV += simulateHit(hitState);
+            };
+
+            // Lock shared data
+            lock_guard<mutex> locK(mtx);
+            totalStand += localStandEV;
+            totalHit += localHitEV;
+        };
+
+        vector<thread> threadPool;
+        for (int i = 0; i < threadCount; i++)
+            threadPool.emplace_back(worker, simulationsPerThread);
+        for (auto& thread : threadPool) thread.join();
+
+        int total = simulationsPerThread * threadCount;
+        ev.stand = totalStand / total;
+        ev.hit = totalHit / total;
     }
-
-    // auto worker = [&](int simulationsPerThread) {
-    //     double localStandEV = 0.0;
-    //     double localHitEV = 0.0;
-
-    //     for (int i = 0; i < simulationsPerThread; i++) {
-    //         GameState standState = simState;
-    //         GameState hitState = simState;
-
-    //         localStandEV += simulateStand(standState);
-    //         localHitEV += simulateHit(hitState);
-    //     };
-
-    //     // Lock shared data
-    //     lock_guard<mutex> locK(mtx);
-    //     standEV += localStandEV;
-    //     hitEV += localHitEV;
-    // };
-
-    // vector<thread> threadPool;
-    // for (int i = 0; i < threadCount; i++)
-    //     threadPool.emplace_back(worker, simulationsPerThread);
-    // for (auto& thread : threadPool) thread.join();
-
-    // int total = simulationsPerThread * threadCount;
-    // ev.stand = standEV / total;
-    // ev.hit = hitEV / total;
 
     return ev;
 }
