@@ -13,6 +13,7 @@ class MonteCarlo {
     static double simulateStand(GameState& state);
     static double simulateHit(GameState& state);
     static double simulateDecision(GameState& state);
+    static double simulateDouble(GameState& state);
 };
 
 #endif
