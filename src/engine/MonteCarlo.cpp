@@ -35,10 +35,7 @@ EVResult MonteCarlo::simulate(const GameState& state) {
 
     if (threadCount == 1) {
         // Single core path
-        // double totalStand = 0.0, prevStand = 0.0;
-        // double totalHit = 0.0, prevHit = 0.0;
-        double prevStand = 0.0;
-        double prevHit = 0.0;
+        double prevStand = 0.0, prevHit = 0.0;
         int n = 0;
 
         while (n < maxSimulations) {

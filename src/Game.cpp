@@ -62,12 +62,16 @@ void Game::playerTurn(GameState& state) {
         cout << "----------------------------------------" << endl;
 
         while (true) {
-            cout << "Hit (h) or Stand (s): ";
+            cout << "Hit (h) or Stand (s) or Double (d): ";
             cin >> action;
 
             if (action == 'h') {
                 playerHit(state);
                 break;
+            }
+            if (action == 'd') {
+                playerDouble(state);
+                return;
             }
             if (action == 's') return;
 
@@ -110,6 +114,10 @@ void Game::playerHit(GameState& state) {
     state.player.addCard(state.shoe.draw());
 };
 
+void Game::playerDouble(GameState& state) {
+    playerHit(state);
+}
+
 void Game::playRound(GameState& state) {
     dealInitialCards(state);
 
@@ -117,9 +125,9 @@ void Game::playRound(GameState& state) {
 
     playerTurn(state);
 
-    if (!state.player.isBust()) Game::playDealer(state);
+    if (!state.player.isBust()) playDealer(state);
 
-    Outcome result = Game::determineOutcome(state);
+    Outcome result = determineOutcome(state);
 
     cout << "========================================" << endl;
     cout << "SUMMARY" << endl;
