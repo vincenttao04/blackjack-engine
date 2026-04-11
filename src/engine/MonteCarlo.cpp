@@ -22,42 +22,83 @@ GameState MonteCarlo::prepareSimState(const GameState& state) {
 EVResult MonteCarlo::simulate(const GameState& state) {
     GameState simState = prepareSimState(state);
 
-    const int simulations = 100000;
-    const int threadCount = (thread::hardware_concurrency() == 0)
-                                ? 4
-                                : thread::hardware_concurrency();
-    const int simulationsPerThread = simulations / threadCount;
-    double standEV = 0.0;
-    double hitEV = 0.0;
-    mutex mtx;
+    const int minSimulations = 10000;
+    const int maxSimulations = 10000000;
+    const double epsilon = 0.001;
 
-    auto worker = [&](int simulationsPerThread) {
-        double localStandEV = 0.0;
-        double localHitEV = 0.0;
+    const int detectedThreads = thread::hardware_concurrency();
+    const int threadCount = (detectedThreads <= 1) ? 1 : detectedThreads;
 
-        for (int i = 0; i < simulationsPerThread; i++) {
+    double totalStand = 0.0;
+    double totalHit = 0.0;
+    EVResult ev;
+
+    if (threadCount == 1) {
+        // Single core path
+        // double totalStand = 0.0, prevStand = 0.0;
+        // double totalHit = 0.0, prevHit = 0.0;
+        double prevStand = 0.0;
+        double prevHit = 0.0;
+        int n = 0;
+
+        while (n < maxSimulations) {
             GameState standState = simState;
             GameState hitState = simState;
 
-            localStandEV += simulateStand(standState);
-            localHitEV += simulateHit(hitState);
+            totalStand += simulateStand(standState);
+            totalHit += simulateHit(hitState);
+            n++;
+
+            if (n % 500 == 0) {
+                double currentStand = totalStand / n;
+                double currentHit = totalHit / n;
+
+                if (n >= minSimulations &&
+                    abs(currentStand - prevStand) < epsilon &&
+                    abs(currentHit - prevHit) < epsilon) {
+                    break;
+                }
+
+                prevStand = currentStand;
+                prevHit = currentHit;
+            }
+        }
+
+        ev.stand = totalStand / n;
+        ev.hit = totalHit / n;
+    } else {
+        // Multi core path
+        const int simulationsPerThread = maxSimulations / threadCount;
+        mutex mtx;
+
+        auto worker = [&](int simulationsPerThread) {
+            double localStandEV = 0.0;
+            double localHitEV = 0.0;
+
+            for (int i = 0; i < simulationsPerThread; i++) {
+                GameState standState = simState;
+                GameState hitState = simState;
+
+                localStandEV += simulateStand(standState);
+                localHitEV += simulateHit(hitState);
+            };
+
+            // Lock shared data
+            lock_guard<mutex> locK(mtx);
+            totalStand += localStandEV;
+            totalHit += localHitEV;
         };
 
-        // Lock shared data
-        lock_guard<mutex> locK(mtx);
-        standEV += localStandEV;
-        hitEV += localHitEV;
-    };
+        vector<thread> threadPool;
+        for (int i = 0; i < threadCount; i++)
+            threadPool.emplace_back(worker, simulationsPerThread);
+        for (auto& thread : threadPool) thread.join();
 
-    vector<thread> threadPool;
-    for (int i = 0; i < threadCount; i++)
-        threadPool.emplace_back(worker, simulationsPerThread);
-    for (auto& thread : threadPool) thread.join();
+        int total = simulationsPerThread * threadCount;
+        ev.stand = totalStand / total;
+        ev.hit = totalHit / total;
+    }
 
-    int total = simulationsPerThread * threadCount;
-    EVResult ev;
-    ev.stand = standEV / total;
-    ev.hit = hitEV / total;
     return ev;
 }
 
