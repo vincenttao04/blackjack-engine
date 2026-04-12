@@ -13,8 +13,6 @@ Action monteCarlo(const GameState& state) {
 }
 
 Action baseline(const GameState& state) {
-    int value = state.player.value();
-    bool soft = state.player.isSoft();
     return (state.player.value() < 17 ||
             (state.player.value() == 17 && state.player.isSoft()))
                ? Action::Hit

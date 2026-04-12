@@ -29,6 +29,7 @@ void Game::dealInitialCards(GameState& state) {
 
 void Game::playerTurn(GameState& state) {
     char action = 'h';
+    bool isFirstRound = true;
 
     while (true) {
         cout << "Player: ";
@@ -45,13 +46,22 @@ void Game::playerTurn(GameState& state) {
         EVResult ev = MonteCarlo::simulate(state);
         Action recommended = ev.bestAction();
 
-        cout << "Advisor: stand EV = " << ev.stand << ", hit EV = " << ev.hit
-             << ", double EV = " << ev.doubleDown << endl;
+        if (isFirstRound) {
+            cout << "Advisor: stand EV = " << ev.stand
+                 << ", hit EV = " << ev.hit << ", double EV = " << ev.doubleDown
+                 << endl;
+            isFirstRound = false;
+        } else {
+            cout << "Advisor: stand EV = " << ev.stand
+                 << ", hit EV = " << ev.hit << endl;
+        }
 
         if (recommended == Action::Stand) {
             cout << "RECOMMENDATION: " << "STAND" << endl;
         } else if (recommended == Action::Hit) {
             cout << "RECOMMENDATION: " << "HIT" << endl;
+        } else if (recommended == Action::Double) {
+            cout << "RECOMMENDATION: " << "DOUBLE" << endl;
         } else {
             cout << "RECOMMENDATION: " << "SAME" << endl;
         }
@@ -62,7 +72,11 @@ void Game::playerTurn(GameState& state) {
         cout << "----------------------------------------" << endl;
 
         while (true) {
-            cout << "Hit (h) or Stand (s) or Double (d): ";
+            if (isFirstRound) {
+                cout << "Hit (h) or Stand (s) or Double (d): ";
+            } else {
+                cout << "Hit (h) or Stand (s): ";
+            }
             cin >> action;
 
             if (action == 'h') {
