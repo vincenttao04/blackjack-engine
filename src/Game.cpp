@@ -46,7 +46,7 @@ void Game::playerTurn(GameState& state) {
         Action recommended = ev.bestAction();
 
         cout << "Advisor: stand EV = " << ev.stand << ", hit EV = " << ev.hit
-             << endl;
+             << ", double EV = " << ev.doubleDown << endl;
 
         if (recommended == Action::Stand) {
             cout << "RECOMMENDATION: " << "STAND" << endl;
@@ -116,6 +116,11 @@ void Game::playerHit(GameState& state) {
 
 void Game::playerDouble(GameState& state) {
     playerHit(state);
+
+    cout << "Player: ";
+    printHand(state.player);
+
+    return;
 }
 
 void Game::playRound(GameState& state) {
