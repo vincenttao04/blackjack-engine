@@ -39,21 +39,24 @@ void Game::playerTurn(GameState& state) {
             break;
         };
 
+        bool canDouble = state.player.canDouble();
+
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
 
         EVResult ev = MonteCarlo::simulate(state);
         Action recommended = ev.bestAction();
 
-        cout << "Advisor: stand EV = " << ev.stand << ", hit EV = " << ev.hit
-             << endl;
+        cout << "Advisor: hit EV = " << ev.hit << ", stand EV = " << ev.stand;
+        if (canDouble) cout << ", double EV = " << ev.doubleDown;
+        cout << endl;
 
-        if (recommended == Action::Stand) {
-            cout << "RECOMMENDATION: " << "STAND" << endl;
-        } else if (recommended == Action::Hit) {
+        if (recommended == Action::Hit) {
             cout << "RECOMMENDATION: " << "HIT" << endl;
-        } else {
-            cout << "RECOMMENDATION: " << "SAME" << endl;
+        } else if (recommended == Action::Stand) {
+            cout << "RECOMMENDATION: " << "STAND" << endl;
+        } else if (recommended == Action::Double) {
+            cout << "RECOMMENDATION: " << "DOUBLE" << endl;
         }
 
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -62,7 +65,9 @@ void Game::playerTurn(GameState& state) {
         cout << "----------------------------------------" << endl;
 
         while (true) {
-            cout << "Hit (h) or Stand (s): ";
+            cout << "Hit (h) or Stand (s)";
+            if (canDouble) cout << " or Double (d)";
+            cout << ": ";
             cin >> action;
 
             if (action == 'h') {
@@ -70,6 +75,14 @@ void Game::playerTurn(GameState& state) {
                 break;
             }
             if (action == 's') return;
+            if (action == 'd' && canDouble) {
+                playerDouble(state);
+
+                cout << "Player: ";
+                printHand(state.player);
+
+                return;
+            }
 
             cout << "Invalid input" << endl;
         }
@@ -110,6 +123,10 @@ void Game::playerHit(GameState& state) {
     state.player.addCard(state.shoe.draw());
 };
 
+void Game::playerDouble(GameState& state) {
+    playerHit(state);
+}
+
 void Game::playRound(GameState& state) {
     dealInitialCards(state);
 
@@ -117,9 +134,9 @@ void Game::playRound(GameState& state) {
 
     playerTurn(state);
 
-    if (!state.player.isBust()) Game::playDealer(state);
+    if (!state.player.isBust()) playDealer(state);
 
-    Outcome result = Game::determineOutcome(state);
+    Outcome result = determineOutcome(state);
 
     cout << "========================================" << endl;
     cout << "SUMMARY" << endl;

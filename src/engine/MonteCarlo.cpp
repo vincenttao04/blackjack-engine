@@ -23,70 +23,87 @@ EVResult MonteCarlo::simulate(const GameState& state) {
     GameState simState = prepareSimState(state);
 
     const int minSimulations = 10000;
-    const int maxSimulations = 10000000;
+    const int maxSimulations = 100000;
     const double epsilon = 0.001;
 
     const int detectedThreads = thread::hardware_concurrency();
     const int threadCount = (detectedThreads <= 1) ? 1 : detectedThreads;
 
-    double totalStand = 0.0;
     double totalHit = 0.0;
+    double totalStand = 0.0;
+    double totalDouble = 0.0;
     EVResult ev;
+
+    bool canDouble = simState.player.canDouble();
 
     if (threadCount == 1) {
         // Single core path
-        // double totalStand = 0.0, prevStand = 0.0;
-        // double totalHit = 0.0, prevHit = 0.0;
-        double prevStand = 0.0;
-        double prevHit = 0.0;
+        double prevStand = 0.0, prevHit = 0.0, prevDouble = 0.0;
         int n = 0;
 
         while (n < maxSimulations) {
-            GameState standState = simState;
             GameState hitState = simState;
+            GameState standState = simState;
 
-            totalStand += simulateStand(standState);
             totalHit += simulateHit(hitState);
+            totalStand += simulateStand(standState);
+
+            if (canDouble) {
+                GameState doubleState = simState;
+                totalDouble += simulateDouble(doubleState);
+            }
+
             n++;
 
             if (n % 500 == 0) {
-                double currentStand = totalStand / n;
                 double currentHit = totalHit / n;
+                double currentStand = totalStand / n;
+                double currentDouble = totalDouble / n;
 
                 if (n >= minSimulations &&
+                    abs(currentHit - prevHit) < epsilon &&
                     abs(currentStand - prevStand) < epsilon &&
-                    abs(currentHit - prevHit) < epsilon) {
+                    abs(currentDouble - prevDouble) < epsilon) {
                     break;
                 }
 
-                prevStand = currentStand;
                 prevHit = currentHit;
+                prevStand = currentStand;
+                prevDouble = currentDouble;
             }
         }
 
-        ev.stand = totalStand / n;
         ev.hit = totalHit / n;
+        ev.stand = totalStand / n;
+        if (canDouble) ev.doubleDown = totalDouble / n;
     } else {
         // Multi core path
         const int simulationsPerThread = maxSimulations / threadCount;
         mutex mtx;
 
         auto worker = [&](int simulationsPerThread) {
-            double localStandEV = 0.0;
             double localHitEV = 0.0;
+            double localStandEV = 0.0;
+            double localDoubleEV = 0.0;
 
             for (int i = 0; i < simulationsPerThread; i++) {
-                GameState standState = simState;
                 GameState hitState = simState;
+                GameState standState = simState;
 
-                localStandEV += simulateStand(standState);
                 localHitEV += simulateHit(hitState);
+                localStandEV += simulateStand(standState);
+
+                if (canDouble) {
+                    GameState doubleState = simState;
+                    localDoubleEV += simulateDouble(doubleState);
+                }
             };
 
             // Lock shared data
             lock_guard<mutex> locK(mtx);
-            totalStand += localStandEV;
             totalHit += localHitEV;
+            totalStand += localStandEV;
+            totalDouble += localDoubleEV;
         };
 
         vector<thread> threadPool;
@@ -95,8 +112,9 @@ EVResult MonteCarlo::simulate(const GameState& state) {
         for (auto& thread : threadPool) thread.join();
 
         int total = simulationsPerThread * threadCount;
-        ev.stand = totalStand / total;
         ev.hit = totalHit / total;
+        ev.stand = totalStand / total;
+        if (canDouble) ev.doubleDown = totalDouble / total;
     }
 
     return ev;
@@ -143,4 +161,12 @@ double MonteCarlo::simulateDecision(GameState& hitState) {
     double hitEV = simulateHit(nextHitState);
 
     return std::max(standEV, hitEV);
+}
+
+double MonteCarlo::simulateDouble(GameState& state) {
+    state.player.addCard(state.shoe.draw());
+
+    if (state.player.isBust()) return -2.0;
+
+    return 2 * simulateStand(state);
 }

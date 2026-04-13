@@ -42,6 +42,10 @@ bool Hand::isBlackjack() const {
     return value() == 21 && activeSize == 2;
 }
 
+bool Hand::canDouble() const {
+    return activeSize == 2;
+}
+
 void Hand::clear() {
     activeSize = 0;
 }

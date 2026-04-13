@@ -4,9 +4,9 @@
 enum class Action {
     Stand,
     Hit,
+    Double,
 
     // coming-soon
-    Double,
     Split,
     Surrender
 };

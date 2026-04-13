@@ -20,6 +20,7 @@ struct Hand {
     bool isSoft() const;
     bool isBust() const;
     bool isBlackjack() const;
+    bool canDouble() const;
     void clear();
 };
 

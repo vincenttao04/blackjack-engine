@@ -13,8 +13,6 @@ Action monteCarlo(const GameState& state) {
 }
 
 Action baseline(const GameState& state) {
-    int value = state.player.value();
-    bool soft = state.player.isSoft();
     return (state.player.value() < 17 ||
             (state.player.value() == 17 && state.player.isSoft()))
                ? Action::Hit
@@ -37,7 +35,7 @@ void Backtest::printResults(int wins, int loses, int pushes, int rounds) {
     double netEV = (double)(wins - loses) / rounds;
 
     cout << "========================================" << endl;
-    cout << "BACKTEST RESULTS (" << rounds << " rounds)" << endl;
+    cout << "RESULTS (" << rounds << " rounds)" << endl;
     cout << "========================================" << endl;
     cout << "Wins:   " << wins << " (" << winRate << "%)" << endl;
     cout << "Losses: " << loses << " (" << loseRate << "%)" << endl;
@@ -55,18 +53,21 @@ void Backtest::run(Strategy strategy, int rounds) {
     for (int i = 0; i < rounds; i++) {
         if (state.shoe.needsReshuffle()) {
             state.shoe.initialize();
-        };
+        }
 
         Game::dealInitialCards(state);
 
         while (!state.player.isBust()) {
             Action action = strategy(state);
 
-            if (action == Action::Stand) break;
-
             if (action == Action::Hit) {
                 Game::playerHit(state);
                 continue;
+            }
+            if (action == Action::Stand) break;
+            if (action == Action::Double) {
+                Game::playerDouble(state);
+                break;
             }
 
             break;
@@ -87,6 +88,4 @@ void Backtest::run(Strategy strategy, int rounds) {
     }
 
     printResults(wins, loses, pushes, rounds);
-
-    return;
 };

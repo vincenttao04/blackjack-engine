@@ -12,6 +12,7 @@ class Game {
     static void playDealer(GameState& state);
     static Outcome determineOutcome(const GameState& state);
     static void playerHit(GameState& state);
+    static void playerDouble(GameState& state);
     static void playRound(GameState& state);
 };
 
