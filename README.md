@@ -35,6 +35,6 @@ Delta magnitude on a logarithmic scale drops from ~1e-1 to ~1e-3 as simulations 
 
 ## TODO
 
-- Expand decision space (split, double, insurance, etc.) - (in progress)
+- Expand decision space (~~double~~, split, insurance, etc.) - (in progress)
 - Use simulation results for reinforcement learning model training
 - frontend/ui for gameplay/simulation display

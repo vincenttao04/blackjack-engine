@@ -77,6 +77,10 @@ void Game::playerTurn(GameState& state) {
             if (action == 's') return;
             if (action == 'd' && canDouble) {
                 playerDouble(state);
+
+                cout << "Player: ";
+                printHand(state.player);
+
                 return;
             }
 
@@ -121,11 +125,6 @@ void Game::playerHit(GameState& state) {
 
 void Game::playerDouble(GameState& state) {
     playerHit(state);
-
-    cout << "Player: ";
-    printHand(state.player);
-
-    return;
 }
 
 void Game::playRound(GameState& state) {
