@@ -29,7 +29,6 @@ void Game::dealInitialCards(GameState& state) {
 
 void Game::playerTurn(GameState& state) {
     char action = 'h';
-    bool isFirstRound = true;
 
     while (true) {
         cout << "Player: ";
@@ -46,24 +45,16 @@ void Game::playerTurn(GameState& state) {
         EVResult ev = MonteCarlo::simulate(state);
         Action recommended = ev.bestAction();
 
-        if (isFirstRound) {
-            cout << "Advisor: stand EV = " << ev.stand
-                 << ", hit EV = " << ev.hit << ", double EV = " << ev.doubleDown
-                 << endl;
-            isFirstRound = false;
-        } else {
-            cout << "Advisor: stand EV = " << ev.stand
-                 << ", hit EV = " << ev.hit << endl;
-        }
+        cout << "Advisor: hit EV = " << ev.hit << ", stand EV = " << ev.stand;
+        if (state.player.canDouble()) cout << ", double EV = " << ev.doubleDown;
+        cout << endl;
 
-        if (recommended == Action::Stand) {
-            cout << "RECOMMENDATION: " << "STAND" << endl;
-        } else if (recommended == Action::Hit) {
+        if (recommended == Action::Hit) {
             cout << "RECOMMENDATION: " << "HIT" << endl;
+        } else if (recommended == Action::Stand) {
+            cout << "RECOMMENDATION: " << "STAND" << endl;
         } else if (recommended == Action::Double) {
             cout << "RECOMMENDATION: " << "DOUBLE" << endl;
-        } else {
-            cout << "RECOMMENDATION: " << "SAME" << endl;
         }
 
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -72,22 +63,20 @@ void Game::playerTurn(GameState& state) {
         cout << "----------------------------------------" << endl;
 
         while (true) {
-            if (isFirstRound) {
-                cout << "Hit (h) or Stand (s) or Double (d): ";
-            } else {
-                cout << "Hit (h) or Stand (s): ";
-            }
+            cout << "Hit (h) or Stand (s)";
+            if (state.player.canDouble()) cout << " or Double (d)";
+            cout << ": ";
             cin >> action;
 
             if (action == 'h') {
                 playerHit(state);
                 break;
             }
-            if (action == 'd') {
+            if (action == 's') return;
+            if (action == 'd' && state.player.canDouble()) {
                 playerDouble(state);
                 return;
             }
-            if (action == 's') return;
 
             cout << "Invalid input" << endl;
         }
