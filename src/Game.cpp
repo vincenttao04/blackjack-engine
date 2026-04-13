@@ -39,6 +39,8 @@ void Game::playerTurn(GameState& state) {
             break;
         };
 
+        bool canDouble = state.player.canDouble();
+
         cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
              << endl;
 
@@ -46,7 +48,7 @@ void Game::playerTurn(GameState& state) {
         Action recommended = ev.bestAction();
 
         cout << "Advisor: hit EV = " << ev.hit << ", stand EV = " << ev.stand;
-        if (state.player.canDouble()) cout << ", double EV = " << ev.doubleDown;
+        if (canDouble) cout << ", double EV = " << ev.doubleDown;
         cout << endl;
 
         if (recommended == Action::Hit) {
@@ -64,7 +66,7 @@ void Game::playerTurn(GameState& state) {
 
         while (true) {
             cout << "Hit (h) or Stand (s)";
-            if (state.player.canDouble()) cout << " or Double (d)";
+            if (canDouble) cout << " or Double (d)";
             cout << ": ";
             cin >> action;
 
@@ -73,7 +75,7 @@ void Game::playerTurn(GameState& state) {
                 break;
             }
             if (action == 's') return;
-            if (action == 'd' && state.player.canDouble()) {
+            if (action == 'd' && canDouble) {
                 playerDouble(state);
                 return;
             }

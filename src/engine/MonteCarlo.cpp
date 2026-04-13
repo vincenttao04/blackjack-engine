@@ -34,6 +34,8 @@ EVResult MonteCarlo::simulate(const GameState& state) {
     double totalDouble = 0.0;
     EVResult ev;
 
+    bool canDouble = simState.player.canDouble();
+
     if (threadCount == 1) {
         // Single core path
         double prevStand = 0.0, prevHit = 0.0, prevDouble = 0.0;
@@ -42,11 +44,15 @@ EVResult MonteCarlo::simulate(const GameState& state) {
         while (n < maxSimulations) {
             GameState hitState = simState;
             GameState standState = simState;
-            GameState doubleState = simState;
 
             totalHit += simulateHit(hitState);
             totalStand += simulateStand(standState);
-            totalDouble += simulateDouble(doubleState);
+
+            if (canDouble) {
+                GameState doubleState = simState;
+                totalDouble += simulateDouble(doubleState);
+            }
+
             n++;
 
             if (n % 500 == 0) {
@@ -69,7 +75,7 @@ EVResult MonteCarlo::simulate(const GameState& state) {
 
         ev.hit = totalHit / n;
         ev.stand = totalStand / n;
-        ev.doubleDown = totalDouble / n;
+        if (canDouble) ev.doubleDown = totalDouble / n;
     } else {
         // Multi core path
         const int simulationsPerThread = maxSimulations / threadCount;
@@ -83,11 +89,14 @@ EVResult MonteCarlo::simulate(const GameState& state) {
             for (int i = 0; i < simulationsPerThread; i++) {
                 GameState hitState = simState;
                 GameState standState = simState;
-                GameState doubleState = simState;
 
                 localHitEV += simulateHit(hitState);
                 localStandEV += simulateStand(standState);
-                localDoubleEV += simulateDouble(doubleState);
+
+                if (canDouble) {
+                    GameState doubleState = simState;
+                    localDoubleEV += simulateDouble(doubleState);
+                }
             };
 
             // Lock shared data
@@ -105,7 +114,7 @@ EVResult MonteCarlo::simulate(const GameState& state) {
         int total = simulationsPerThread * threadCount;
         ev.hit = totalHit / total;
         ev.stand = totalStand / total;
-        ev.doubleDown = totalDouble / total;
+        if (canDouble) ev.doubleDown = totalDouble / total;
     }
 
     return ev;
